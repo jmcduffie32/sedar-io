@@ -72,10 +72,16 @@
     var ctx = canvas.getContext("2d");
 
     var board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    var suggestions = [];
-    var arrow = []; // tail p, head p, slope, tail r, tail c, head r, head c
-    var player_pos = [,];
+    var arrow = [];
+    var player_pos = [];
     var current_player = 0;
+
+    function clean_board() {
+      board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+      arrow = []; // tail p, head p, slope, tail r, tail c, head r, head c
+      player_pos = [];
+      current_player = 0;
+    }
 
     function arrowize(p1,p2) {
       var arrow_tail_r = Math.floor(p1/8);
@@ -226,7 +232,6 @@
         }
         // queen piece
         if (mark > 1) {
-          console.log(color);
           ctx.beginPath();
           ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI, false);
           ctx.fill();
@@ -296,6 +301,7 @@
 
 
     function start_game() {
+      clean_board();
       update_board();
       document.getElementById("console").innerHTML = "select white position";
       var piece = 2;
@@ -319,6 +325,7 @@
       };
       canvas.addEventListener("click", handler);
 
+      var ended = false;
       // game play
       canvas.addEventListener("click", function(e) {
         var rect = canvas.getBoundingClientRect()
@@ -349,10 +356,13 @@
 
           update_board();
 
-          if (game_is_over()) {
-            document.getElementById("console").innerHTML = {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+        }
+        if (game_is_over()) {
+          document.getElementById("console").innerHTML = {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+          if (ended) {
+            start_game();
           }
-
+          ended = true;
         }
 
 
