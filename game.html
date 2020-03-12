@@ -358,7 +358,7 @@
 
         }
         if (game_is_over()) {
-          document.getElementById("console").innerHTML = {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+          document.getElementById("console").innerHTML = {0:"White", 1:"Black"}[1 - current_player] + " wins!<br>click board to restart";
           if (ended) {
             start_game();
           }
