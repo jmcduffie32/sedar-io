@@ -396,7 +396,7 @@
         if (game_is_over()) {
           document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins! Click board to restart";
           if (ended) {
-            start_game();
+            location.reload();
           }
           ended = true;
         }
