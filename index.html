@@ -363,7 +363,7 @@
 
       var ended = false;
       // game play
-      canvas.addEventListener("click", function(e) {
+      game_handler = function(e) {
         var rect = canvas.getBoundingClientRect()
         var USER_X = event.clientX - rect.left;
         var USER_Y = event.clientY - rect.top;
@@ -396,15 +396,17 @@
         if (game_is_over()) {
           document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins! Click board to restart";
           if (ended) {
-            location.reload();
+            canvas.removeEventListener('click', game_handler);
+            start_game();
           }
           ended = true;
         }
 
 
-      });
-
       }
+      canvas.addEventListener("click", game_handler);
+
+    }
 
 
   </script>
