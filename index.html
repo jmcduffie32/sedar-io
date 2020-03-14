@@ -21,7 +21,7 @@
         }
 
         canvas {
-            background-color:#c7f9fc;
+            /* background-color: #c7f9fc; */
             margin:0px;
             box-shadow: 0px 0px 20px 1px black;
             display: block;
@@ -59,7 +59,7 @@
     </style>
 
   </head>
-  <body style="min-width:840px;">
+  <body style="min-width:840px;" onload="set_color();">
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -101,7 +101,7 @@
       <div class="row">
         <div class="col-lg-9">
           <div class="bg-shadow center-block panel">
-            <canvas id="myCanvas" width="800" height="800" onclick="set_loc(); game_step();"></canvas>
+            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"></canvas>
           </div>
         </div>
         <div class="col-lg-3">
@@ -121,6 +121,16 @@
               </li>
             </ul>
             <br>
+            <h5>Board Color:</h5>
+            <div class="row">
+              <div class="col-xs-8">
+                <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
+              </div>
+              <div class="col-xs-4">
+                <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
+              </div>
+            </div>
+            <br>
             <h5>Computer Difficulty:</h5>
             <ul style="padding-left:20px;">
               <li>
@@ -135,8 +145,7 @@
               </li>
             </ul>
             <br>
-            <button class="btn btn-block btn-lg btn-success center-block"
-                    onclick="start_game(); this.innerHTML='Restart'; this.classList.remove('btn-success'); this.classList.add('btn-danger');" style="border:0px;">
+            <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="restart()" id="start">
               Start
             </button>
             <br>
@@ -162,7 +171,19 @@
   </body>
   <script>
 
-    var canvas = document.getElementById("myCanvas");
+  function set_color() {
+    document.getElementById('board').style.backgroundColor = document.getElementById('color').value;
+  }
+
+  function restart() {
+    start_game();
+    var start = document.getElementById('start');
+    start.innerHTML='Restart';
+    start.classList.remove('btn-success');
+    start.classList.add('btn-danger');
+  }
+
+    var canvas = document.getElementById("board");
     var ctx = canvas.getContext("2d");
 
     var board;
@@ -172,6 +193,8 @@
     var current_player = 0;
 
     var mode;
+
+
 
 
     var loc = -1;
