@@ -508,20 +508,22 @@
           // change player
           current_player = 1 - current_player;
           document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
-          if (mode == "computer") {
+          if (game_is_over()) {
+            document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+          }
+          else if (mode == "computer") {
             var move = get_comp_move();
             console.log("comp move = ", move);
             move_to(move);
             current_player = 1 - current_player;
             document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+            if (game_is_over()) {
+              document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+            }
           }
-
         }
       }
 
-      if (game_is_over()) {
-        document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
-      }
       update_board();
     }
 
