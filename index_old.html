@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="touch-icons/apple-touch-icon-iphone-retina-120x120.png">
     <link rel="apple-touch-icon" sizes="144x144" href="touch-icons/apple-touch-icon-ipad-retina-152x152.png">
 
+
     <style>
 
         * {
@@ -29,7 +30,7 @@
 
         .bg-shadow {
           width:840px;
-          background-color: #3F3F3F;
+          background-color: #353535;
           padding:20px;
           /* box-shadow: 0px 0px 10px 5px lightgrey; */
 
@@ -49,17 +50,12 @@
         }
 
         .dark {
-          background-color: #3F3F3F;
-        }
-
-        li {
-          list-style-type: none;
+          background-color:black;
         }
 
     </style>
-
   </head>
-  <body style="min-width:840px;">
+  <body style="min-width:840px;" onload="start_game()">
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -99,59 +95,28 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-9">
-          <div class="bg-shadow center-block panel">
-            <canvas id="myCanvas" width="800" height="800" onclick="set_loc(); game_step();"></canvas>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+          <div class="panel" style="background-color:black; margin-top:30px;">
+            <h1 id="console" style="padding-left:20px; color:white; font-family:monospace"></h1>
           </div>
         </div>
-        <div class="col-lg-3">
-          <div class="panel dark" style="padding:10px;">
-            <h4 class="text-center">Game Settings</h4><br>
-            <h5>Mode:</h5>
-            <ul style="padding-left:20px;">
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="human" checked>Two-Player
-                </label>
-              </li>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="computer">Computer
-                </label>
-              </li>
-            </ul>
-            <br>
-            <h5>Computer Difficulty:</h5>
-            <ul style="padding-left:20px;">
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="0" checked>0 (first possible move)
-                </label>
-              </li>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="1">1 (random)
-                </label>
-              </li>
-            </ul>
-            <br>
-            <button class="btn btn-lg btn-success center-block"
-                    onclick="start_game(); this.innerHTML='Restart'; this.classList.remove('btn-success'); this.classList.add('btn-danger');" style="border:0px;">
-              Start
-            </button>
-            <br>
-            <a data-toggle="modal" data-target="#myModal" style="font-size:10pt" href=""><u>Learn to Play!</u></a>
-          </div>
-          <div class="panel" style="background-color:black; margin-top:30px;">
-            <h5 id="console" style="padding-left:20px; color:white; font-family:monospace">
-              >>> Click start to begin
-            </h5>
+        <div class="col-md-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="bg-shadow center-block">
+            <!-- <h1 id="title" class="text-center" style="font-size:100px; color:lightgrey; margin-bottom: 30px;">Sedario</h1> -->
+            <canvas id="myCanvas" width="800" height="800"></canvas>
           </div>
         </div>
       </div>
     </div>
     <div class="container-fluid">
-
+    <button type="button" class="btn" data-toggle="modal" data-target="#myModal"
+            style="background-color:transparent; color:lightgrey; font-size:14pt">
+            Learn to Play!
+    </button>
 
 
   </body>
@@ -160,26 +125,12 @@
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
 
-    var board;
-    var arrow;
-    var player_pos;
-
+    var board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var arrow = [];
+    var player_pos = [];
     var current_player = 0;
 
-    var mode;
-
-    var loc = -1;
-    function set_loc() {
-      var rect = canvas.getBoundingClientRect()
-      var USER_X = event.clientX - rect.left;
-      var USER_Y = event.clientY - rect.top;
-      var row = (USER_Y - (USER_Y % 100)) / 100;
-      var col = (USER_X - (USER_X % 100)) / 100;
-      loc = row * 8 + col;
-    }
-
     function clean_board() {
-      console.log("clean_board()");
       board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
       arrow = []; // tail p, head p, slope, tail r, tail c, head r, head c
       player_pos = [];
@@ -187,7 +138,6 @@
     }
 
     function arrowize(p1,p2) {
-      console.log("arrowize()");
       var arrow_tail_r = Math.floor(p1/8);
       var arrow_tail_c = p1 % 8;
       var arrow_head_r = Math.floor(p2/8);
@@ -232,7 +182,6 @@
     }
 
     function is_on_arrow(p) {
-      console.log("is_on_arrow()");
       if (arrow == []) {
         return false;
       }
@@ -271,17 +220,18 @@
     	}
     }
 
-    function can_move_to(p, player) {
+    function can_move_to(p) {
 
       // occupied
       if (board[p] != 0) {
         return false;
       }
 
-      var r1 = Math.floor(player_pos[player] / 8);
-      var c1 = player_pos[player] % 8;
+      var r1 = Math.floor(player_pos[current_player] / 8);
+      var c1 = player_pos[current_player] % 8;
       var r2 = Math.floor(p / 8);
       var c2 = p % 8;
+
 
       // blocked
       var start_r = r1;
@@ -302,7 +252,7 @@
       }
 
       // same side as arrow
-      if (!is_on_same_side_of_arrow(player_pos[player], p)) {
+      if (!is_on_same_side_of_arrow(player_pos[current_player], p)) {
         return false;
       }
 
@@ -310,37 +260,7 @@
       return true;
     }
 
-
-
-    function get_possible_moves_from(p, player) {
-      possible_moves = [];
-      for (i in board) {
-        if (can_move_to(i, player)) {
-          possible_moves.push(i);
-        }
-      }
-      return possible_moves;
-    }
-
-    function get_comp_move() {
-      console.log("get_comp_move()");
-      possible_moves = get_possible_moves_from(player_pos[current_player], current_player);
-      if (possible_moves.length == 0) {
-        return -1;
-      }
-
-      if (diff == 0) {
-        return possible_moves[0];
-      }
-      if (diff == 1) {
-        return possible_moves[Math.floor(Math.random() * possible_moves.length)];
-      }
-    }
-
-
-
     function update_board() {
-      console.log("update_board()");
       ctx.clearRect(0, 0, 800, 800);
 
       // add the grid lines
@@ -379,7 +299,7 @@
         }
         // suggestions
         if (player_pos.length == 2) {
-          if (can_move_to(p, current_player)) {
+          if (can_move_to(p)) {
             var x = 100 * (p % 8) + 40;
             var y = 100 * Math.floor(p / 8) + 40;
             ctx.fillStyle = "lightgreen";
@@ -425,79 +345,85 @@
       }
     }
 
-
-
     function game_is_over() {
-      console.log("game_is_over()");
       for (p in board) {
-        if (can_move_to(p, current_player))
+        if (can_move_to(p))
           return false;
       }
       return true;
     }
 
+
     function start_game() {
-      console.log("start_game()");
       clean_board();
       update_board();
-      mode = document.querySelector('input[name="mode"]:checked').value;
-      diff = document.querySelector('input[name="diff"]:checked').value;
       document.getElementById("console").innerHTML = ">>> select white position";
-    }
-
-    function move_to(p) {
-      console.log("move_to()");
-      if (can_move_to(p, current_player)) {
-        // add block piece
-        board[player_pos[current_player]] = 1;
-
-        // update arrow
-        arrowize(player_pos[current_player], p);
-
-        // move current player
-        board[p] = current_player + 2;
-        player_pos[current_player] = p;
-
-        if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
-          arrow = [];
+      var piece = 2;
+      handler = function(e) {
+        var rect = canvas.getBoundingClientRect()
+        var USER_X = event.clientX - rect.left;
+        var USER_Y = event.clientY - rect.top;
+        var row = (USER_Y - (USER_Y % 100)) / 100;
+        var col = (USER_X - (USER_X % 100)) / 100;
+        if (player_pos[0] != row * 8 + col) {
+          board[row * 8 + col] = piece;
+          player_pos[piece - 2] = row * 8 + col;
+          piece++;
+          document.getElementById("console").innerHTML = ">>> select black position";
+          update_board();
+          if (piece == 4) {
+            document.getElementById("console").innerHTML = ">>> white move";
+            canvas.removeEventListener('click', handler);
+          }
         }
+      };
+      canvas.addEventListener("click", handler);
 
-        // change player
-        current_player = 1 - current_player;
-        document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
-      }
-    }
+      var ended = false;
+      // game play
+      game_handler = function(e) {
+        var rect = canvas.getBoundingClientRect()
+        var USER_X = event.clientX - rect.left;
+        var USER_Y = event.clientY - rect.top;
+        var row = (USER_Y - (USER_Y % 100)) / 100;
+        var col = (USER_X - (USER_X % 100)) / 100;
 
-    function game_step() {
-      console.log("game_step()");
-      // no pieces are on the board, so place white
-      if (player_pos.length == 0) {
-        board[loc] = 2;
-        player_pos.push(loc);
-        document.getElementById("console").innerHTML = ">>> select black position";
-      }
-      // only white is on the board, so place black
-      else if (player_pos.length == 1 && loc != player_pos[0]) {
-        board[loc] = 3;
-        player_pos.push(loc);
-        document.getElementById("console").innerHTML = ">>> white move";
-      }
-      // both pieces are placed
-      else if (player_pos.length == 2) {
-        move_to(loc);
-        if (mode == "computer") {
-          var move = get_comp_move();
-          console.log("comp move = ", move);
-          move_to(move);
+        if (can_move_to(row * 8 + col)) {
+          // add block piece
+          board[player_pos[current_player]] = 1;
+
+          // update arrow
+          arrowize(player_pos[current_player], row * 8 + col);
+
+          // move current player
+          board[row * 8 + col] = current_player + 2;
+          player_pos[current_player] = row * 8 + col;
+
+
+          if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
+            arrow = [];
+          }
+
+          // change player
+          current_player = 1 - current_player;
+          document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+
+          update_board();
+
         }
-
         if (game_is_over()) {
-          document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+          document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins! Click board to restart";
+          if (ended) {
+            canvas.removeEventListener('click', game_handler);
+            start_game();
+          }
+          ended = true;
         }
 
 
       }
-      update_board();
+      canvas.addEventListener("click", game_handler);
+
     }
 
 
