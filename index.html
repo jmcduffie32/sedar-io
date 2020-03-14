@@ -139,16 +139,6 @@
               </li>
             </ul>
             <br>
-            <h5>Board Color:</h5>
-            <div class="row">
-              <div class="col-xs-8">
-                <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
-              </div>
-              <div class="col-xs-4">
-                <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
-              </div>
-            </div>
-            <br>
             <h5>Computer Difficulty:</h5>
             <ul>
               <li>
@@ -168,7 +158,26 @@
               </li>
             </ul>
             <br>
-            <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="restart()" id="start">
+            <h5>Board Color:</h5>
+            <div class="row">
+              <div class="col-xs-8">
+                <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
+              </div>
+              <div class="col-xs-4">
+                <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
+              </div>
+            </div>
+            <br>
+            <label>
+              <input type="checkbox" name="numbered" value="numbered" id="numbered"> Numbered
+            </label>
+            <br>
+            <label>
+              <input type="checkbox" name="labeled" value="labeled" id="labeled"> Labeled
+            </label>
+            <br>
+            <br>
+            <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
               Start
             </button>
             <br>

@@ -19,8 +19,8 @@ class state {
 
     // make sure that the tail is to the left
     if (arrow_tail_c > arrow_head_c) {
-      temp_tail_r = arrow_tail_r;
-      temp_tail_c = arrow_tail_c;
+      var temp_tail_r = arrow_tail_r;
+      var temp_tail_c = arrow_tail_c;
       arrow_tail_r = arrow_head_r;
       arrow_tail_c = arrow_head_c;
       arrow_head_r = temp_tail_r;
@@ -74,6 +74,7 @@ class state {
       return false;
     }
 
+
     var r1 = Math.floor(this.player_pos[this.current_player] / 8);
     var c1 = this.player_pos[this.current_player] % 8;
     var r2 = Math.floor(p / 8);
@@ -93,13 +94,17 @@ class state {
       }
     }
 
+
+
+
     // queen's move
     if ((Math.abs(r1 - r2) != Math.abs(c1 - c2) || Math.abs(c1 - c2) == 0) && Math.abs(c1 - c2) != 0 && Math.abs(r1 - r2) != 0) {
       return false;
     }
 
+
     // same side as arrow
-    if (!is_on_same_side_of_arrow(this.player_pos[this.current_player], p)) {
+    if (!this.is_on_same_side_of_arrow(this.player_pos[this.current_player], p)) {
       return false;
     }
 
@@ -108,10 +113,10 @@ class state {
   }
 
   get_possible_moves() {
-    possible_moves = [];
-    for (p in board) {
-      if (can_move_to(p)) {
-        possible_moves.push(p);
+    var possible_moves = [];
+    for (var p in this.board) {
+      if (this.can_move_to(Number(p))) {
+        possible_moves.push(Number(p));
       }
     }
     return possible_moves;
@@ -147,7 +152,7 @@ class state {
     this.board[this.player_pos[this.current_player]] = 1;
 
     // update arrow
-    arrowize(this.player_pos[this.current_player], p);
+    this.arrowize(this.player_pos[this.current_player], p);
 
     // move current player
     this.board[p] = this.current_player + 2;
@@ -156,43 +161,46 @@ class state {
     // switch player
     this.current_player = 1 - this.current_player;
 
-    if (is_on_arrow(this.player_pos[0]) && is_on_arrow(this.player_pos[1])) {
+    if (this.is_on_arrow(this.player_pos[0]) && this.is_on_arrow(this.player_pos[1])) {
       this.arrow = [];
     }
-  }
-
-  expand() {
-    var children = [];
-    possible_moves = get_possible_moves();
-    for (var i in possible_moves) {
-      var child = this.clone();
-      child.move_to(possible_moves[i]);
-      children.push(child);
-    }
-    return children;
   }
 
   clone() {
     return new state([...board], [...arrow], [...player_pos], current_player);
   }
 
+  expand() {
+    var children = [];
+    var possible_moves = this.get_possible_moves();
+    for (var i in possible_moves) {
+      var move = possible_moves[i];
+      var child = this.clone();
+      child.move_to(move);
+      children.push(child);
+    }
+    return children;
+  }
+
+
 }
 
 
 function look_forward_one_step(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player)
-  var val = 0;
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var val = Infinity;
   var best_child = null;
-  children = game_state.expand();
+  var children = game_state.expand();
   for (var i in children) {
     var child = children[i];
-    var opponent_move_count = child.get_possible_moves().length; // how many moves the other player will have
+    var opponent_moves = child.get_possible_moves();
+    var opponent_move_count = opponent_moves.length; // how many moves the other player will have
     if (opponent_move_count == 0) {
       return child.player_pos[1 - child.current_player]; // return since it is a winning move
     }
     // child.move_to(child.player_pos[1 - child.current_player]); // fake nodes!!
     // var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
-    var count = opponent_move_count; // + player_move_count;
+    var count = opponent_move_count // + player_move_count;
     if (count < val) { // if this is better than old move, then update
       val = count;
       best_child = child;
