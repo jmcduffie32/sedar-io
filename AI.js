@@ -190,13 +190,13 @@ function look_forward_one_step(board, arrow, player_pos, current_player) {
     if (opponent_move_count == 0) {
       return child.player_pos[1 - child.current_player]; // return since it is a winning move
     }
-    child.move_to(child.player_pos[1 - child.current_player]); // fake nodes!!
-    var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
-    var count = opponent_move_count + player_move_count;
+    // child.move_to(child.player_pos[1 - child.current_player]); // fake nodes!!
+    // var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
+    var count = opponent_move_count; // + player_move_count;
     if (count < val) { // if this is better than old move, then update
       val = count;
       best_child = child;
     }
   }
-  return best_child.player_pos[best_child.current_player];
+  return best_child.player_pos[1 - best_child.current_player];
 }

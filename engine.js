@@ -1,4 +1,5 @@
 
+
   function set_color() {
     document.getElementById('board').style.backgroundColor = document.getElementById('color').value;
   }
@@ -21,6 +22,7 @@
     var current_player = 0;
 
     var mode;
+    var comp_color;
 
 
 
@@ -180,19 +182,21 @@
     function get_comp_move() {
       console.log("get_comp_move()");
       possible_moves = get_possible_moves();
+      var out = -1;
       if (possible_moves.length == 0) {
-        return -1;
+        out = -1;
       }
-
-      if (diff == 0) {
-        return possible_moves[0];
+      else if (diff == 0) {
+        out = possible_moves[0];
       }
-      if (diff == 1) {
-        return possible_moves[Math.floor(Math.random() * possible_moves.length)];
+      else if (diff == 1) {
+        out = possible_moves[Math.floor(Math.random() * possible_moves.length)];
       }
-      if (diff == 2) {
-        return look_forward_one_step(board, arrow, player_pos, current_player);
+      else if (diff == 2) {
+        out = look_forward_one_step(board, arrow, player_pos, current_player);
       }
+      console.log("out = ", out);
+      return out;
     }
 
 
@@ -294,11 +298,13 @@
       return true;
     }
 
+
     function start_game() {
       console.log("start_game()");
       clean_board();
       update_board();
       mode = document.querySelector('input[name="mode"]:checked').value;
+      comp_color = document.querySelector('input[name="comp_color"]:checked').value;
       diff = document.querySelector('input[name="diff"]:checked').value;
       document.getElementById("console").innerHTML = ">>> select white position";
     }
@@ -323,6 +329,18 @@
       }
     }
 
+
+
+    function comp_move() {
+      var move = get_comp_move();
+      move_to(move);
+      document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+      if (game_is_over()) {
+        document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+      }
+    }
+
+
     function game_step() {
       console.log("game_step()");
       // no pieces are on the board, so place white
@@ -336,6 +354,9 @@
         board[loc] = 3;
         player_pos.push(loc);
         document.getElementById("console").innerHTML = ">>> white move";
+        if ((mode == "computer") && (comp_color == "white")){
+          comp_move();
+        }
       }
       // both pieces are placed
       else if (player_pos.length == 2) {
@@ -346,16 +367,9 @@
             document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
           }
           else if (mode == "computer") {
-            var move = get_comp_move();
-            console.log("comp move = ", move);
-            move_to(move);
-            document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
-            if (game_is_over()) {
-              document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
-            }
+            comp_move();
           }
         }
       }
-
       update_board();
     }

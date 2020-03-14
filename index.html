@@ -57,6 +57,10 @@
           list-style-type: none;
         }
 
+        ul {
+          padding-left:20px;
+        }
+
     </style>
 
   </head>
@@ -109,7 +113,7 @@
           <div class="panel dark" style="padding:10px;">
             <h4 class="text-center">Game Settings</h4><br>
             <h5>Mode:</h5>
-            <ul style="padding-left:20px;">
+            <ul>
               <li>
                 <label class="radio-inline">
                   <input type="radio" name="mode" value="human" checked>Two-Player
@@ -119,6 +123,19 @@
                 <label class="radio-inline">
                   <input type="radio" name="mode" value="computer">Computer
                 </label>
+                <h6>Computer Color:</h6>
+                <ul>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="comp_color" value="white">white
+                    </label>
+                  </li>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="comp_color" value="black" checked>black
+                    </label>
+                  </li>
+                </ul>
               </li>
             </ul>
             <br>
@@ -133,7 +150,7 @@
             </div>
             <br>
             <h5>Computer Difficulty:</h5>
-            <ul style="padding-left:20px;">
+            <ul>
               <li>
                 <label class="radio-inline">
                   <input type="radio" name="diff" value="0" checked>0 (first possible move)
