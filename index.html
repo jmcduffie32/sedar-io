@@ -168,6 +168,7 @@
 
     var mode;
 
+
     var loc = -1;
     function set_loc() {
       var rect = canvas.getBoundingClientRect()
@@ -176,6 +177,7 @@
       var row = (USER_Y - (USER_Y % 100)) / 100;
       var col = (USER_X - (USER_X % 100)) / 100;
       loc = row * 8 + col;
+      console.log("loc = ", loc);
     }
 
     function clean_board() {
@@ -271,17 +273,17 @@
     	}
     }
 
-    function can_move_to(p, player) {
-
+    function can_move_to(p) {
       // occupied
       if (board[p] != 0) {
         return false;
       }
 
-      var r1 = Math.floor(player_pos[player] / 8);
-      var c1 = player_pos[player] % 8;
+      var r1 = Math.floor(player_pos[current_player] / 8);
+      var c1 = player_pos[current_player] % 8;
       var r2 = Math.floor(p / 8);
       var c2 = p % 8;
+
 
       // blocked
       var start_r = r1;
@@ -302,7 +304,7 @@
       }
 
       // same side as arrow
-      if (!is_on_same_side_of_arrow(player_pos[player], p)) {
+      if (!is_on_same_side_of_arrow(player_pos[current_player], p)) {
         return false;
       }
 
@@ -312,19 +314,14 @@
 
 
 
-    function get_possible_moves_from(p, player) {
-      possible_moves = [];
-      for (i in board) {
-        if (can_move_to(i, player)) {
-          possible_moves.push(i);
-        }
-      }
-      return possible_moves;
-    }
-
     function get_comp_move() {
       console.log("get_comp_move()");
-      possible_moves = get_possible_moves_from(player_pos[current_player], current_player);
+      possible_moves = [];
+      for (p in board) {
+        if (can_move_to(p)) {
+          possible_moves.push(p);
+        }
+      }
       if (possible_moves.length == 0) {
         return -1;
       }
@@ -379,7 +376,7 @@
         }
         // suggestions
         if (player_pos.length == 2) {
-          if (can_move_to(p, current_player)) {
+          if (can_move_to(p)) {
             var x = 100 * (p % 8) + 40;
             var y = 100 * Math.floor(p / 8) + 40;
             ctx.fillStyle = "lightgreen";
@@ -430,7 +427,7 @@
     function game_is_over() {
       console.log("game_is_over()");
       for (p in board) {
-        if (can_move_to(p, current_player))
+        if (can_move_to(p))
           return false;
       }
       return true;
@@ -447,24 +444,18 @@
 
     function move_to(p) {
       console.log("move_to()");
-      if (can_move_to(p, current_player)) {
-        // add block piece
-        board[player_pos[current_player]] = 1;
+      // add block piece
+      board[player_pos[current_player]] = 1;
 
-        // update arrow
-        arrowize(player_pos[current_player], p);
+      // update arrow
+      arrowize(player_pos[current_player], p);
 
-        // move current player
-        board[p] = current_player + 2;
-        player_pos[current_player] = p;
+      // move current player
+      board[p] = current_player + 2;
+      player_pos[current_player] = p;
 
-        if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
-          arrow = [];
-        }
-
-        // change player
-        current_player = 1 - current_player;
-        document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+      if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
+        arrow = [];
       }
     }
 
@@ -484,18 +475,24 @@
       }
       // both pieces are placed
       else if (player_pos.length == 2) {
-        move_to(loc);
-        if (mode == "computer") {
-          var move = get_comp_move();
-          console.log("comp move = ", move);
-          move_to(move);
+        if (can_move_to(loc)) {
+          move_to(loc);
+          // change player
+          current_player = 1 - current_player;
+          document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+          if (mode == "computer") {
+            var move = get_comp_move();
+            console.log("comp move = ", move);
+            move_to(move);
+            current_player = 1 - current_player;
+            document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
+          }
+
         }
+      }
 
-        if (game_is_over()) {
-          document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
-        }
-
-
+      if (game_is_over()) {
+        document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
       }
       update_board();
     }
