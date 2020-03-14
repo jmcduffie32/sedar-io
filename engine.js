@@ -1,5 +1,21 @@
 
 
+  var canvas = document.getElementById("board");
+  var ctx = canvas.getContext("2d");
+
+  var board;
+  var arrow;
+  var player_pos;
+
+  var current_player = 0;
+
+  var mode;
+  var comp_color;
+  var numbered;
+  var labeled;
+  var custom_start;
+
+
   function set_color() {
     document.getElementById('board').style.backgroundColor = document.getElementById('color').value;
   }
@@ -14,26 +30,17 @@
     diff = document.querySelector('input[name="diff"]:checked').value;
     numbered = document.getElementById('numbered').checked;
     labeled = document.getElementById('labeled').checked;
-    document.getElementById("console").innerHTML = ">>> select white position";
+    custom_start = document.getElementById('custom_start').checked;
     clean_board();
+    if (custom_start) {
+      document.getElementById("console").innerHTML = ">>> select white position";
+    } else {
+      board[3] = 2;
+      board[60] = 3;
+      player_pos = [3, 60];
+    }
     update_board();
   }
-
-  var canvas = document.getElementById("board");
-  var ctx = canvas.getContext("2d");
-
-  var board;
-  var arrow;
-  var player_pos;
-
-  var current_player = 0;
-
-  var mode;
-  var comp_color;
-  var numbered;
-  var labeled;
-
-
 
   var loc = -1;
   function set_loc() {
@@ -357,23 +364,29 @@
 
 
   function game_step() {
-    // no pieces are on the board, so place white
-    if (player_pos.length == 0) {
-      board[loc] = 2;
-      player_pos.push(loc);
-      document.getElementById("console").innerHTML = ">>> select black position";
-    }
-    // only white is on the board, so place black
-    else if (player_pos.length == 1 && loc != player_pos[0]) {
-      board[loc] = 3;
-      player_pos.push(loc);
-      document.getElementById("console").innerHTML = ">>> white move";
-      if ((mode == "computer") && (comp_color == "white")){
-        comp_move();
+    if (custom_start) {
+      // no pieces are on the board, so place white
+      if (player_pos.length == 0) {
+        board[loc] = 2;
+        player_pos.push(loc);
+        document.getElementById("console").innerHTML = ">>> select black position";
+        update_board();
+        return;
+      }
+      // only white is on the board, so place black
+      if (player_pos.length == 1 && loc != player_pos[0]) {
+        board[loc] = 3;
+        player_pos.push(loc);
+        document.getElementById("console").innerHTML = ">>> white move";
+        if ((mode == "computer") && (comp_color == "white")){
+          comp_move();
+        }
+        update_board();
+        return;
       }
     }
     // both pieces are placed
-    else if (player_pos.length == 2) {
+    if (player_pos.length == 2) {
       if (can_move_to(loc)) {
         move_to(loc);
         document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";

@@ -112,6 +112,9 @@
         <div class="col-lg-3">
           <div class="panel dark" style="padding:10px;">
             <h4 class="text-center">Game Settings</h4><br>
+            <label>
+              <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
+            </label>
             <h5>Mode:</h5>
             <ul>
               <li>
@@ -121,7 +124,7 @@
               </li>
               <li>
                 <label class="radio-inline">
-                  <input type="radio" name="mode" value="computer">Computer
+                  <input type="radio" name="mode" value="computer" checked>Computer
                 </label>
                 <h6>Computer Color:</h6>
                 <ul>
@@ -138,12 +141,11 @@
                 </ul>
               </li>
             </ul>
-            <br>
             <h5>Computer Difficulty:</h5>
             <ul>
               <li>
                 <label class="radio-inline">
-                  <input type="radio" name="diff" value="0" checked>0 (first possible move)
+                  <input type="radio" name="diff" value="0">0 (first possible move)
                 </label>
               </li>
               <li>
@@ -153,7 +155,7 @@
               </li>
               <li>
                 <label class="radio-inline">
-                  <input type="radio" name="diff" value="2">2 (look forward one step)
+                  <input type="radio" name="diff" value="2" checked>2 (look forward one step)
                 </label>
               </li>
             </ul>
