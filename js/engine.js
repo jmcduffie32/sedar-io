@@ -36,6 +36,13 @@
       board[3] = 2;
       board[60] = 3;
       player_pos = [3, 60];
+      if ((mode == "computer") && (comp_color == "white")) {
+        var move = get_comp_move();
+        if (move == -1) {
+          console.log("get_comp_move() returns invalid -1");
+        }
+        move_to(move);
+      }
     }
     update_board();
   }
@@ -241,7 +248,7 @@
         ctx.beginPath();
         ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI, false);
         ctx.fill();
-        if (p == player_pos[current_player] && player_pos.length == 2){
+        if (!won && p == player_pos[current_player] && player_pos.length == 2){
           ctx.fillStyle = "red";
           ctx.beginPath();
           ctx.arc(x + size/2, y + size/2, 10, 0, 2 * Math.PI, false);
@@ -284,8 +291,9 @@
       }
     }
 
+
     // draw arrow // TODO: make this less messy
-    if (arrow != []) {
+    if (arrow != [] && !won) {
 
       var arrow_tail_r = Math.floor(arrow[0]/8);
       var arrow_tail_c = arrow[0] % 8;
@@ -317,6 +325,18 @@
       ctx.moveTo(arrow_tail_x, arrow_tail_y);
       ctx.lineTo(arrow_head_x, arrow_head_y);
       ctx.stroke();
+    }
+
+
+    if (won) {
+      var crown = new Image();
+      crown.onload = function() {
+        var p = player_pos[1 - current_player];
+        var x = 100 * (p % 8) + 20;
+        var y = 100 * Math.floor(p / 8) + 20;
+        ctx.drawImage(crown, x, y, 60, 60);
+      };
+      crown.src = "img/crown.png";
     }
 
 
@@ -407,6 +427,8 @@
           }
         }
       }
+
       update_board();
+
     }
   }
