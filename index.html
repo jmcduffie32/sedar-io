@@ -110,80 +110,86 @@
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="panel dark" style="padding:10px;">
-            <h4 class="text-center">Game Settings</h4><br>
-            <label>
-              <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
-            </label>
-            <h5>Mode:</h5>
-            <ul>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="human" checked>Two-Player
+          <div class="row">
+            <div class="panel dark" style="padding:10px;">
+                <h4 class="text-center">Game Settings</h4><br>
+                <label>
+                  <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
                 </label>
-              </li>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="computer" checked>Computer
-                </label>
-                <h6>Computer Color:</h6>
+                <h5>Mode:</h5>
                 <ul>
                   <li>
                     <label class="radio-inline">
-                      <input type="radio" name="comp_color" value="white">white
+                      <input type="radio" name="mode" value="human" checked>Two-Player
                     </label>
                   </li>
                   <li>
                     <label class="radio-inline">
-                      <input type="radio" name="comp_color" value="black" checked>black
+                      <input type="radio" name="mode" value="computer" checked>Computer
+                    </label>
+                    <h6>Computer Color:</h6>
+                    <ul>
+                      <li>
+                        <label class="radio-inline">
+                          <input type="radio" name="comp_color" value="white">white
+                        </label>
+                      </li>
+                      <li>
+                        <label class="radio-inline">
+                          <input type="radio" name="comp_color" value="black" checked>black
+                        </label>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <h5>Computer Difficulty:</h5>
+                <ul>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="diff" value="0">0 (first possible move)
+                    </label>
+                  </li>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="diff" value="1">1 (random)
+                    </label>
+                  </li>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="diff" value="2" checked>2 (look forward one step)
                     </label>
                   </li>
                 </ul>
-              </li>
-            </ul>
-            <h5>Computer Difficulty:</h5>
-            <ul>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="0">0 (first possible move)
-                </label>
-              </li>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="1">1 (random)
-                </label>
-              </li>
-              <li>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="2" checked>2 (look forward one step)
-                </label>
-              </li>
-            </ul>
-            <br>
-            <h5>Board Color:</h5>
-            <div class="row">
-              <div class="col-xs-8">
-                <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
               </div>
-              <div class="col-xs-4">
-                <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
+            <div class="panel dark" style="padding:10px;">
+                <h4 class="text-center">Display Settings</h4><br>
+                <h5>Board Color:</h5>
+                <div class="row">
+                  <div class="col-xs-8">
+                    <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
+                  </div>
+                  <div class="col-xs-4">
+                    <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
+                  </div>
+                </div>
+                <br>
+                <label>
+                  <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions"> Show suggestions
+                </label>
+                <br>
+                <label>
+                  <input type="checkbox" name="numbered" value="numbered" id="numbered"> Numbered
+                </label>
+                <br>
+                <label>
+                  <input type="checkbox" name="labeled" value="labeled" id="labeled"> Labeled
+                </label>
+                <br>
+                <br>
+                <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
+                  Start
+                </button>
               </div>
-            </div>
-            <br>
-            <label>
-              <input type="checkbox" name="numbered" value="numbered" id="numbered"> Numbered
-            </label>
-            <br>
-            <label>
-              <input type="checkbox" name="labeled" value="labeled" id="labeled"> Labeled
-            </label>
-            <br>
-            <br>
-            <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
-              Start
-            </button>
-            <br>
-            <a data-toggle="modal" data-target="#myModal" style="font-size:10pt" href=""><u>Learn to Play!</u></a>
           </div>
           <div class="panel" style="background-color:black; margin-top:30px;">
             <h5 id="console" style="padding-left:20px; color:white; font-family:monospace">
@@ -191,6 +197,7 @@
             </h5>
           </div>
         </div>
+        <a data-toggle="modal" data-target="#myModal" style="font-size:10pt" href=""><u>Learn to Play!</u></a>
       </div>
       <div class="row">
         <br>

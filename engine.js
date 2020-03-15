@@ -11,9 +11,9 @@
 
   var mode;
   var comp_color;
-  var numbered;
-  var labeled;
   var custom_start;
+
+  var won;
 
 
   function set_color() {
@@ -28,8 +28,6 @@
     mode = document.querySelector('input[name="mode"]:checked').value;
     comp_color = document.querySelector('input[name="comp_color"]:checked').value;
     diff = document.querySelector('input[name="diff"]:checked').value;
-    numbered = document.getElementById('numbered').checked;
-    labeled = document.getElementById('labeled').checked;
     custom_start = document.getElementById('custom_start').checked;
     clean_board();
     if (custom_start) {
@@ -40,6 +38,7 @@
       player_pos = [3, 60];
     }
     update_board();
+    console.log("UDB 1");
   }
 
   var loc = -1;
@@ -58,6 +57,7 @@
     arrow = []; // tail p, head p, slope, tail r, tail c, head r, head c
     player_pos = [];
     current_player = 0;
+    won = false;
   }
 
   function arrowize(p1,p2) {
@@ -212,6 +212,7 @@
 
 
   function update_board() {
+    console.log("update_board()");
     ctx.clearRect(0, 0, 800, 800);
 
     // add the grid lines
@@ -249,19 +250,21 @@
           // ctx.fillRect(x+30, y+30, 20, 20);
         }
       }
-      // suggestions
-      if (player_pos.length == 2) {
-        if (can_move_to(p)) {
-          var x = 100 * (p % 8) + 40;
-          var y = 100 * Math.floor(p / 8) + 40;
-          ctx.fillStyle = "lightgreen";
-          ctx.fillRect(x, y, 20, 20);
+      if (document.getElementById('show_suggestions').checked) {
+        // suggestions
+        if (player_pos.length == 2) {
+          if (can_move_to(p)) {
+            var x = 100 * (p % 8) + 40;
+            var y = 100 * Math.floor(p / 8) + 40;
+            ctx.fillStyle = "lightgreen";
+            ctx.fillRect(x, y, 20, 20);
+          }
         }
       }
     }
 
     // add numbers
-    if (numbered) {
+    if (document.getElementById('numbered').checked) {
       ctx.font = "19px Arial";
       ctx.fillStyle = "darkgrey";
       for (p in board) {
@@ -272,13 +275,13 @@
     }
 
     // add labels
-    if (labeled) {
+    if (document.getElementById('labeled').checked) {
       ctx.font = "19px Arial";
       ctx.fillStyle = "darkgrey";
       for (p in board) {
         var x = 100 * (p % 8) + 77;
         var y = 100 * Math.floor(p / 8) + 18;
-        ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(p / 8), x, y);
+        ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(1 + p / 8), x, y);
       }
     }
 
@@ -316,17 +319,29 @@
       ctx.lineTo(arrow_head_x, arrow_head_y);
       ctx.stroke();
     }
-  }
 
 
+    if (won) {
+      // Create gradient
+      var grd = ctx.createRadialGradient(400,400,0,400,400,800);
+      grd.addColorStop(0,{0:"white", 1:"black"}[current_player]);
+      grd.addColorStop(1,"transparent");
 
-  function game_is_over() {
-    for (p in board) {
-      if (can_move_to(p))
-        return false;
+      // Fill with gradient
+      ctx.fillStyle = grd;
+      ctx.fillRect(0,0,800,800);
+
+      var winning_img = new Image();
+
+      winning_img.onload = function() {
+        ctx.drawImage(winning_img, 100, 100, 600, 600);
+      };
+      winning_img.src = {0:"img/white_wins.png", 1:"img/black_wins.png"}[1 - current_player];
     }
-    return true;
+
   }
+
+
 
 
   function move_to(p) {
@@ -346,57 +361,53 @@
     if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
       arrow = [];
     }
-  }
 
-
-
-  function comp_move() {
-    var move = get_comp_move();
-    if (move == -1) {
-      console.log("get_comp_move() returns invalid -1");
-    }
-    move_to(move);
     document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
-    if (game_is_over()) {
+    if (get_possible_moves().length == 0) { // game is over
       document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
+      won = true;
     }
+
   }
+
 
 
   function game_step() {
-    if (custom_start) {
-      // no pieces are on the board, so place white
-      if (player_pos.length == 0) {
+    if (!won) {
+
+      if (custom_start && player_pos.length == 0) {
         board[loc] = 2;
         player_pos.push(loc);
         document.getElementById("console").innerHTML = ">>> select black position";
-        update_board();
-        return;
       }
+
       // only white is on the board, so place black
-      if (player_pos.length == 1 && loc != player_pos[0]) {
+      else if (custom_start && player_pos.length == 1 && loc != player_pos[0]) {
         board[loc] = 3;
         player_pos.push(loc);
         document.getElementById("console").innerHTML = ">>> white move";
-        if ((mode == "computer") && (comp_color == "white")){
-          comp_move();
-        }
-        update_board();
-        return;
-      }
-    }
-    // both pieces are placed
-    if (player_pos.length == 2) {
-      if (can_move_to(loc)) {
-        move_to(loc);
-        document.getElementById("console").innerHTML = ">>> " + {0:"white", 1:"black"}[current_player] + " move";
-        if (game_is_over()) {
-          document.getElementById("console").innerHTML =  ">>> " + {0:"White", 1:"Black"}[1 - current_player] + " wins!";
-        }
-        else if (mode == "computer") {
-          comp_move();
+        if ((mode == "computer") && (comp_color == "white")) {
+          var move = get_comp_move();
+          if (move == -1) {
+            console.log("get_comp_move() returns invalid -1");
+          }
+          move_to(move);
         }
       }
+
+      // both pieces are placed
+      else if (player_pos.length == 2) {
+        if (can_move_to(loc)) {
+          move_to(loc);
+          if (mode == "computer" && !won) {
+            var move = get_comp_move();
+            if (move == -1) {
+              console.log("get_comp_move() returns invalid -1");
+            }
+            move_to(move);
+          }
+        }
+      }
+      update_board();
     }
-    update_board();
   }
