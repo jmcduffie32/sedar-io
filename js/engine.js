@@ -218,6 +218,9 @@
     if (diff == 3) {
       return min_opp_and_max_play_mobility(board, arrow, player_pos, current_player);
     }
+    if (diff == 4) {
+      return chaser(board, arrow, player_pos, current_player);
+    }
   }
 
 
