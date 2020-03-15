@@ -208,3 +208,24 @@ function look_forward_one_step(board, arrow, player_pos, current_player) {
   }
   return best_child.player_pos[1 - best_child.current_player];
 }
+
+
+
+
+
+
+
+
+//
+// 
+// var n = 10;
+//
+// function look_forward_n_steps(board, arrow, player_pos, current_player) {
+//   var game_state = new state(board, arrow, player_pos, current_player);
+//   return look_forward_n_steps_helper(game_state, 0);
+// }
+//
+// function look_forward_n_steps_helper(game_state, depth) {
+//
+//
+// }
