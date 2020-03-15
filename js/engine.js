@@ -235,6 +235,42 @@
       }
 
 
+    // draw arrow // TODO: make this less messy
+    if (arrow != []) {
+
+      var arrow_tail_r = Math.floor(arrow[0]/8);
+      var arrow_tail_c = arrow[0] % 8;
+      var arrow_head_r = Math.floor(arrow[1]/8);
+      var arrow_head_c = arrow[1] % 8;
+
+      var arrow_tail_x = 0;
+      var arrow_tail_y = 0;
+      var arrow_head_x = 800;
+      var arrow_head_y = 800;
+
+      if (arrow_tail_c == arrow_head_c) { // vertical
+        arrow_tail_x = 50 + arrow_tail_c * 100;
+        arrow_head_x = 50 + arrow_tail_c * 100;
+      }
+      else if (arrow_tail_r == arrow_head_r) { // horizontal
+        arrow_tail_y = 50 + arrow_tail_r * 100;
+        arrow_head_y = 50 + arrow_tail_r * 100;
+      }
+      else {
+        var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
+        arrow_tail_x = arrow_tail_c * 100;
+        arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
+        arrow_head_x = arrow_head_c * 100 + 100;
+        arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(arrow_tail_x, arrow_tail_y);
+      ctx.lineTo(arrow_head_x, arrow_head_y);
+      ctx.stroke();
+    }
+
+
       // add square markers
       for (p in board) {
         var mark = board[p];
@@ -297,41 +333,6 @@
         }
       }
 
-
-      // draw arrow // TODO: make this less messy
-      if (arrow != [] && !won) {
-
-        var arrow_tail_r = Math.floor(arrow[0]/8);
-        var arrow_tail_c = arrow[0] % 8;
-        var arrow_head_r = Math.floor(arrow[1]/8);
-        var arrow_head_c = arrow[1] % 8;
-
-        var arrow_tail_x = 0;
-        var arrow_tail_y = 0;
-        var arrow_head_x = 800;
-        var arrow_head_y = 800;
-
-        if (arrow_tail_c == arrow_head_c) { // vertical
-          arrow_tail_x = 50 + arrow_tail_c * 100;
-          arrow_head_x = 50 + arrow_tail_c * 100;
-        }
-        else if (arrow_tail_r == arrow_head_r) { // horizontal
-          arrow_tail_y = 50 + arrow_tail_r * 100;
-          arrow_head_y = 50 + arrow_tail_r * 100;
-        }
-        else {
-          var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
-          arrow_tail_x = arrow_tail_c * 100;
-          arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
-          arrow_head_x = arrow_head_c * 100 + 100;
-          arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
-        }
-
-        ctx.beginPath();
-        ctx.moveTo(arrow_tail_x, arrow_tail_y);
-        ctx.lineTo(arrow_head_x, arrow_head_y);
-        ctx.stroke();
-      }
 
 
       if (won) {
@@ -397,10 +398,28 @@
   }
 
 
+  function comp_move() {
+    var move = get_comp_move();
+
+    console.log("comp move:", move);
+
+    if (move == undefined) {
+      console.error("get_comp_move() returns invalid undefined");
+    }
+    if (move == -1) {
+      console.error("get_comp_move() returns invalid -1");
+    }
+    if (move == player_pos[current_player]) {
+      console.error("get_comp_move() returns invalid, opponent position");
+    }
+    move_to(move);
+  }
+
 
   function game_step() {
     if (!won) {
 
+      // no pieces are placed, so place white
       if (custom_start && player_pos.length == 0) {
         board[loc] = 2;
         player_pos.push(loc);
@@ -413,11 +432,7 @@
         player_pos.push(loc);
         document.getElementById("console").innerHTML = ">>> white move";
         if ((mode == "computer") && (comp_color == "white")) {
-          var move = get_comp_move();
-          if (move == -1) {
-            console.log("get_comp_move() returns invalid -1");
-          }
-          move_to(move);
+          comp_move();
         }
       }
 
@@ -426,11 +441,7 @@
         if (can_move_to(loc)) {
           move_to(loc);
           if (mode == "computer" && !won) {
-            var move = get_comp_move();
-            if (move == -1) {
-              console.log("get_comp_move() returns invalid -1");
-            }
-            move_to(move);
+            comp_move();
           }
         }
       }

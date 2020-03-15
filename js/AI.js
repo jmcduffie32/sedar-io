@@ -211,6 +211,7 @@ function min_opp_mobility(board, arrow, player_pos, current_player) {
   return best_child.player_pos[1 - best_child.current_player];
 }
 
+
 /**
     min_opp_and_max_play_mobility is a player that makes move based off
     of restructing the mobility of the opponent on their next turn and
@@ -228,7 +229,7 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
     if (opponent_move_count == 0) {
       return child.player_pos[1 - child.current_player]; // return since it is a winning move
     }
-    child.move_to(child.player_pos[1 - child.current_player]); // have the opponent stay where they are
+    child.move_to(child.player_pos[child.current_player]); // have the opponent stay where they are
     var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
     var count = opponent_move_count + player_move_count;
     if (count < val) { // if this is better than old move, then update
