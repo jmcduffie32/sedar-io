@@ -17,7 +17,7 @@
 
     <style>
 
-        *, a, a:hover {
+        *, a, a:hover, h1 {
             color: lightgrey;
         }
 
@@ -54,6 +54,20 @@
 
         ul {
           padding-left:20px;
+        }
+
+        .score-btn {
+          background-color:transparent;
+          padding-top:0px;
+          padding-bottom:5px;
+        }
+
+        .score-btn:hover > h1 {
+          color: #3F3F3F;
+        }
+
+        .score-btn:focus > h1 {
+          color: #3F3F3F;
         }
 
     </style>
@@ -110,33 +124,41 @@
               <h3 class="text-center">Score Counter</h4><br>
               <div class="row">
                 <div class="col-sm-6">
-                  <h4 class="text-center">White</h4>
+                  <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">White</h4>
                   <h1 class="text-center" id="white-score">0</h1>
                   <div class="row">
                     <div class="col-sm-6">
-                      <h1 class="text-center" style="margin:0px" onclick="down_white();">-</h1>
+                      <button class="btn btn-lg btn-default score-btn center-block" onclick="down_white();">
+                        <h1 class="text-center" style="margin:0px;">-</h1>
+                      </button>
                     </div>
-                    <div class="col-sm-6">
-                      <h1 class="text-center" style="margin:0px" onclick="up_white();">+</h1>
+                    <div class="col-sm-6" style="padding:0px 5px">
+                      <button class="btn btn-lg btn-default score-btn center-block" onclick="up_white();">
+                        <h1 class="text-center" style="margin:0px">+</h1>
+                      </button>
                     </div>
                   </div>
                 </div>
                 <div class="col-sm-6">
-                  <h4 class="text-center">Black</h4>
+                  <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">Black</h4>
                   <h1 class="text-center" id="black-score">0</h1>
                   <div class="row">
                     <div class="col-sm-6">
-                      <h1 class="text-center" style="margin:0px" onclick="down_black();">-</h1>
+                      <button class="btn btn-lg btn-default score-btn center-block" onclick="down_black();">
+                        <h1 class="text-center" style="margin:0px;">-</h1>
+                      </button>
                     </div>
-                    <div class="col-sm-6">
-                      <h1 class="text-center" style="margin:0px" onclick="up_black();">+</h1>
+                    <div class="col-sm-6" style="padding:0px 5px">
+                      <button class="btn btn-lg btn-default score-btn center-block" onclick="up_black();">
+                        <h1 class="text-center" style="margin:0px">+</h1>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="panel dark" style="padding:10px;">
-              <h4 class="text-center">Game Settings</h4><br>
+              <h3 class="text-center">Game Settings</h3><br>
               <label>
                 <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
               </label>
@@ -200,10 +222,10 @@
               </button>
             </div>
             <div class="panel dark" style="padding:10px;">
-              <div class="panel-heading">
-                <h4 class="text-center panel-title">
-                  <a data-toggle="collapse" href="#collapse">Display Settings</a>
-                </h4>
+              <div class="panel-heading panel-title">
+                <a data-toggle="collapse" href="#collapse">
+                  <h3 class="text-center panel-title">Display Settings</h3>
+                </a>
               </div>
               <div id="collapse" class="panel-collapse collapse">
                 <h5>Board Color:</h5>
@@ -257,15 +279,15 @@
       }
       function up_black() {
         var curr = Number(document.getElementById("black-score").innerHTML);
-        document.getElementById("white-score").innerHTML = curr + 1;
+        document.getElementById("black-score").innerHTML = curr + 1;
       }
       function down_white() {
         var curr = Number(document.getElementById("white-score").innerHTML);
-        document.getElementById("white-score").innerHTML = curr - 1;
+        document.getElementById("white-score").innerHTML =  curr > 0 ? curr - 1 : curr;
       }
       function down_black() {
         var curr = Number(document.getElementById("black-score").innerHTML);
-        document.getElementById("white-score").innerHTML = curr - 1;
+        document.getElementById("black-score").innerHTML =  curr > 0 ? curr - 1 : curr;
       }
     </script>
 
