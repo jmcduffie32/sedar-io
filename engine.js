@@ -38,7 +38,6 @@
       player_pos = [3, 60];
     }
     update_board();
-    console.log("UDB 1");
   }
 
   var loc = -1;
@@ -321,23 +320,23 @@
     }
 
 
-    if (won) {
-      // Create gradient
-      var grd = ctx.createRadialGradient(400,400,0,400,400,800);
-      grd.addColorStop(0,{0:"white", 1:"black"}[current_player]);
-      grd.addColorStop(1,"transparent");
-
-      // Fill with gradient
-      ctx.fillStyle = grd;
-      ctx.fillRect(0,0,800,800);
-
-      var winning_img = new Image();
-
-      winning_img.onload = function() {
-        ctx.drawImage(winning_img, 100, 100, 600, 600);
-      };
-      winning_img.src = {0:"img/white_wins.png", 1:"img/black_wins.png"}[1 - current_player];
-    }
+    // if (won) {
+    //   // Create gradient
+    //   var grd = ctx.createRadialGradient(400,400,0,400,400,800);
+    //   grd.addColorStop(0,{0:"white", 1:"black"}[current_player]);
+    //   grd.addColorStop(1,"transparent");
+    //
+    //   // Fill with gradient
+    //   ctx.fillStyle = grd;
+    //   ctx.fillRect(0,0,800,800);
+    //
+    //   var winning_img = new Image();
+    //
+    //   winning_img.onload = function() {
+    //     ctx.drawImage(winning_img, 100, 100, 600, 600);
+    //   };
+    //   winning_img.src = {0:"img/white_wins.png", 1:"img/black_wins.png"}[1 - current_player];
+    // }
 
   }
 
