@@ -234,82 +234,32 @@
         ctx.fillRect(i * 100, 0, 2, 800);
       }
 
-
-    // draw arrow // TODO: make this less messy
-    if (arrow != []) {
-
-      var arrow_tail_r = Math.floor(arrow[0]/8);
-      var arrow_tail_c = arrow[0] % 8;
-      var arrow_head_r = Math.floor(arrow[1]/8);
-      var arrow_head_c = arrow[1] % 8;
-
-      var arrow_tail_x = 0;
-      var arrow_tail_y = 0;
-      var arrow_head_x = 800;
-      var arrow_head_y = 800;
-
-      if (arrow_tail_c == arrow_head_c) { // vertical
-        arrow_tail_x = 50 + arrow_tail_c * 100;
-        arrow_head_x = 50 + arrow_tail_c * 100;
-      }
-      else if (arrow_tail_r == arrow_head_r) { // horizontal
-        arrow_tail_y = 50 + arrow_tail_r * 100;
-        arrow_head_y = 50 + arrow_tail_r * 100;
-      }
-      else {
-        var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
-        arrow_tail_x = arrow_tail_c * 100;
-        arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
-        arrow_head_x = arrow_head_c * 100 + 100;
-        arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(arrow_tail_x, arrow_tail_y);
-      ctx.lineTo(arrow_head_x, arrow_head_y);
-      ctx.stroke();
-    }
-
-
-      // add square markers
+      // add markers
       for (p in board) {
-        var mark = board[p];
+          var mark = board[p];
 
-        var size = {1:100, 2:80, 3:80}[mark];
-        var color = {1:"lightgrey", 2:"white", 3:"black"}[mark];
-        ctx.fillStyle = color;
-        var x = 100 * (p % 8) + ((100 - size) / 2);
-        var y = 100 * Math.floor(p / 8) + ((100 - size) / 2);
+          ctx.fillStyle = "lightgrey";
+          var x = 100 * (p % 8);
+          var y = 100 * Math.floor(p / 8);
 
-        // block piece
-        if (mark == 1) {
-          ctx.fillRect(x, y, size, size);
-        }
-        // queen piece
-        if (mark > 1) {
-          ctx.beginPath();
-          ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI, false);
-          ctx.fill();
-          if (!won && p == player_pos[current_player] && player_pos.length == 2){
-            ctx.fillStyle = "red";
-            ctx.beginPath();
-            ctx.arc(x + size/2, y + size/2, 10, 0, 2 * Math.PI, false);
-            ctx.fill();
-            // ctx.fillRect(x+30, y+30, 20, 20);
+          // block piece
+          if (mark == 1) {
+            ctx.fillRect(x, y, 100, 100);
           }
-        }
-        if (document.getElementById('show_suggestions').checked) {
-          // suggestions
-          if (player_pos.length == 2) {
-            if (can_move_to(p)) {
-              var x = 100 * (p % 8) + 40;
-              var y = 100 * Math.floor(p / 8) + 40;
-              ctx.fillStyle = "lightgreen";
-              ctx.fillRect(x, y, 20, 20);
+
+          // suggestion squares
+          if (document.getElementById('show_suggestions').checked) {
+            // suggestions
+            if (player_pos.length == 2) {
+              if (can_move_to(p)) {
+                var x = 100 * (p % 8) + 40;
+                var y = 100 * Math.floor(p / 8) + 40;
+                ctx.fillStyle = "lightgreen";
+                ctx.fillRect(x, y, 20, 20);
+              }
             }
           }
         }
-      }
 
       // add numbers
       if (document.getElementById('numbered').checked) {
@@ -333,8 +283,61 @@
         }
       }
 
+      // draw arrow // TODO: make this less messy
+      if (arrow != []) {
 
+        var arrow_tail_r = Math.floor(arrow[0]/8);
+        var arrow_tail_c = arrow[0] % 8;
+        var arrow_head_r = Math.floor(arrow[1]/8);
+        var arrow_head_c = arrow[1] % 8;
 
+        var arrow_tail_x = 0;
+        var arrow_tail_y = 0;
+        var arrow_head_x = 800;
+        var arrow_head_y = 800;
+
+        if (arrow_tail_c == arrow_head_c) { // vertical
+          arrow_tail_x = 50 + arrow_tail_c * 100;
+          arrow_head_x = 50 + arrow_tail_c * 100;
+        }
+        else if (arrow_tail_r == arrow_head_r) { // horizontal
+          arrow_tail_y = 50 + arrow_tail_r * 100;
+          arrow_head_y = 50 + arrow_tail_r * 100;
+        }
+        else {
+          var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
+          arrow_tail_x = arrow_tail_c * 100;
+          arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
+          arrow_head_x = arrow_head_c * 100 + 100;
+          arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(arrow_tail_x, arrow_tail_y);
+        ctx.lineTo(arrow_head_x, arrow_head_y);
+        ctx.stroke();
+      }
+
+      // queen pieces
+      for (i in player_pos) {
+        var p = player_pos[i];
+        var x = 100 * (p % 8) + 10;
+        var y = 100 * Math.floor(p / 8) + 10;
+        var color = {0:"white", 1:"black"}[i];
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x + 40, y + 40, 40, 0, 2 * Math.PI, false);
+        ctx.fill();
+
+        if (!won && p == player_pos[current_player] && player_pos.length == 2){
+          ctx.fillStyle = "red";
+          ctx.beginPath();
+          ctx.arc(x + 40, y + 40, 10, 0, 2 * Math.PI, false);
+          ctx.fill();
+        }
+      }
+
+      // crown
       if (won) {
         var crown = new Image();
         crown.onload = function() {
