@@ -240,6 +240,7 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
   return best_child.player_pos[best_child.current_player];
 }
 
+
 /**
     chaser is a player that makes the move that gets it the closest to the
     other player's position
@@ -260,9 +261,14 @@ function chaser(board, arrow, player_pos, current_player) {
     }
 
     // check the distance between you and the opponent
-    var opp_pos = child.player_pos[child.current_player] % 8;
-    var play_pos = child.player_pos[1 - child.current_player] % 8;
-    var distance = Math.abs(opp_pos - play_pos)
+    var opp_pos = child.player_pos[child.current_player];
+    var opp_r = Math.floor(opp_pos / 8);
+    var opp_c = opp_pos % 8;
+    var play_pos = child.player_pos[1 - child.current_player];
+    var play_r = Math.floor(play_pos / 8);
+    var play_c = play_pos % 8;
+
+    var distance = Math.sqrt(Math.pow((opp_r - play_r), 2) + Math.pow((opp_c - play_c), 2));
 
     if (distance < val) { // if this is closer than old move, then update
       val = distance;
