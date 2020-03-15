@@ -151,7 +151,12 @@
                   </li>
                   <li>
                     <label class="radio-inline">
-                      <input type="radio" name="diff" value="2" checked>2 (look forward one step)
+                      <input type="radio" name="diff" value="2" checked>2 (+one step & min opp mobility)
+                    </label>
+                  </li>
+                  <li>
+                    <label class="radio-inline">
+                      <input type="radio" name="diff" value="4" checked>3 (+one step & min opp mobility & max play mobility)
                     </label>
                   </li>
                 </ul>
@@ -169,15 +174,15 @@
                 </div>
                 <br>
                 <label>
-                  <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions"> Show suggestions
+                  <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions" onclick="update_board();"> Show suggestions
                 </label>
                 <br>
                 <label>
-                  <input type="checkbox" name="numbered" value="numbered" id="numbered"> Numbered
+                  <input type="checkbox" name="numbered" value="numbered" id="numbered" onclick="update_board();"> Numbered
                 </label>
                 <br>
                 <label>
-                  <input type="checkbox" name="labeled" value="labeled" id="labeled"> Labeled
+                  <input type="checkbox" name="labeled" value="labeled" id="labeled" onclick="update_board();"> Labeled
                 </label>
                 <br>
                 <br>

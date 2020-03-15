@@ -182,11 +182,16 @@ class state {
     return children;
   }
 
-
 }
 
 
-function look_forward_one_step(board, arrow, player_pos, current_player) {
+
+
+/**
+    min_opp_mobility is a player that makes moves only based off
+    of restricting the mobility of the opponent on their next turn.
+**/
+function min_opp_mobility(board, arrow, player_pos, current_player) {
   var game_state = new state(board, arrow, player_pos, current_player);
   var val = Infinity;
   var best_child = null;
@@ -198,34 +203,38 @@ function look_forward_one_step(board, arrow, player_pos, current_player) {
     if (opponent_move_count == 0) {
       return child.player_pos[1 - child.current_player]; // return since it is a winning move
     }
-    // child.move_to(child.player_pos[1 - child.current_player]); // fake nodes!!
-    // var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
-    var count = opponent_move_count // + player_move_count;
-    if (count < val) { // if this is better than old move, then update
-      val = count;
+    if (opponent_move_count < val) { // if this is better than old move, then update
+      val = opponent_move_count;
       best_child = child;
     }
   }
   return best_child.player_pos[1 - best_child.current_player];
 }
 
-
-
-
-
-
-
-
-//
-// 
-// var n = 10;
-//
-// function look_forward_n_steps(board, arrow, player_pos, current_player) {
-//   var game_state = new state(board, arrow, player_pos, current_player);
-//   return look_forward_n_steps_helper(game_state, 0);
-// }
-//
-// function look_forward_n_steps_helper(game_state, depth) {
-//
-//
-// }
+/**
+    min_opp_and_max_play_mobility is a player that makes move based off
+    of restructing the mobility of the opponent on their next turn and
+    maximizing the player's mobility after this move.
+**/
+function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player) {
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var val = Infinity;
+  var best_child = null;
+  var children = game_state.expand();
+  for (var i in children) {
+    var child = children[i];
+    var opponent_moves = child.get_possible_moves();
+    var opponent_move_count = opponent_moves.length; // how many moves the other player will have
+    if (opponent_move_count == 0) {
+      return child.player_pos[1 - child.current_player]; // return since it is a winning move
+    }
+    child.move_to(child.player_pos[1 - child.current_player]); // have the opponent stay where they are
+    var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
+    var count = opponent_move_count + player_move_count;
+    if (count < val) { // if this is better than old move, then update
+      val = count;
+      best_child = child;
+    }
+  }
+  return best_child.player_pos[best_child.current_player];
+}

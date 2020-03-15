@@ -14,6 +14,7 @@
   var custom_start;
 
   var won;
+  var started = false;
 
 
   function set_color() {
@@ -21,6 +22,7 @@
   }
 
   function start_game() {
+    started = true;
     var start = document.getElementById('start');
     start.innerHTML='Restart';
     start.classList.remove('btn-success');
@@ -211,153 +213,158 @@
       return possible_moves[Math.floor(Math.random() * possible_moves.length)];
     }
     if (diff == 2) {
-      return look_forward_one_step(board, arrow, player_pos, current_player);
+      return min_opp_mobility(board, arrow, player_pos, current_player);
+    }
+    if (diff == 3) {
+      return min_opp_and_max_play_mobility(board, arrow, player_pos, current_player);
     }
   }
 
 
 
   function update_board() {
-    console.log("update_board()");
-    ctx.clearRect(0, 0, 800, 800);
+    if (started) {
+      console.log("update_board()");
+      ctx.clearRect(0, 0, 800, 800);
 
-    // add the grid lines
-    ctx.fillStyle = "lightgrey";
-    for (var i = 1; i < 8; i++) {
-      ctx.fillRect(0, i * 100, 800, 2);
-      ctx.fillRect(i * 100, 0, 2, 800);
-    }
-
-
-    // add square markers
-    for (p in board) {
-      var mark = board[p];
-
-      var size = {1:100, 2:80, 3:80}[mark];
-      var color = {1:"lightgrey", 2:"white", 3:"black"}[mark];
-      ctx.fillStyle = color;
-      var x = 100 * (p % 8) + ((100 - size) / 2);
-      var y = 100 * Math.floor(p / 8) + ((100 - size) / 2);
-
-      // block piece
-      if (mark == 1) {
-        ctx.fillRect(x, y, size, size);
+      // add the grid lines
+      ctx.fillStyle = "lightgrey";
+      for (var i = 1; i < 8; i++) {
+        ctx.fillRect(0, i * 100, 800, 2);
+        ctx.fillRect(i * 100, 0, 2, 800);
       }
-      // queen piece
-      if (mark > 1) {
-        ctx.beginPath();
-        ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI, false);
-        ctx.fill();
-        if (!won && p == player_pos[current_player] && player_pos.length == 2){
-          ctx.fillStyle = "red";
-          ctx.beginPath();
-          ctx.arc(x + size/2, y + size/2, 10, 0, 2 * Math.PI, false);
-          ctx.fill();
-          // ctx.fillRect(x+30, y+30, 20, 20);
+
+
+      // add square markers
+      for (p in board) {
+        var mark = board[p];
+
+        var size = {1:100, 2:80, 3:80}[mark];
+        var color = {1:"lightgrey", 2:"white", 3:"black"}[mark];
+        ctx.fillStyle = color;
+        var x = 100 * (p % 8) + ((100 - size) / 2);
+        var y = 100 * Math.floor(p / 8) + ((100 - size) / 2);
+
+        // block piece
+        if (mark == 1) {
+          ctx.fillRect(x, y, size, size);
         }
-      }
-      if (document.getElementById('show_suggestions').checked) {
-        // suggestions
-        if (player_pos.length == 2) {
-          if (can_move_to(p)) {
-            var x = 100 * (p % 8) + 40;
-            var y = 100 * Math.floor(p / 8) + 40;
-            ctx.fillStyle = "lightgreen";
-            ctx.fillRect(x, y, 20, 20);
+        // queen piece
+        if (mark > 1) {
+          ctx.beginPath();
+          ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI, false);
+          ctx.fill();
+          if (!won && p == player_pos[current_player] && player_pos.length == 2){
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(x + size/2, y + size/2, 10, 0, 2 * Math.PI, false);
+            ctx.fill();
+            // ctx.fillRect(x+30, y+30, 20, 20);
+          }
+        }
+        if (document.getElementById('show_suggestions').checked) {
+          // suggestions
+          if (player_pos.length == 2) {
+            if (can_move_to(p)) {
+              var x = 100 * (p % 8) + 40;
+              var y = 100 * Math.floor(p / 8) + 40;
+              ctx.fillStyle = "lightgreen";
+              ctx.fillRect(x, y, 20, 20);
+            }
           }
         }
       }
-    }
 
-    // add numbers
-    if (document.getElementById('numbered').checked) {
-      ctx.font = "19px Arial";
-      ctx.fillStyle = "darkgrey";
-      for (p in board) {
-        var x = 100 * (p % 8) + 3;
-        var y = 100 * Math.floor(p / 8) + 97;
-        ctx.fillText(p, x, y);
-      }
-    }
-
-    // add labels
-    if (document.getElementById('labeled').checked) {
-      ctx.font = "19px Arial";
-      ctx.fillStyle = "darkgrey";
-      for (p in board) {
-        var x = 100 * (p % 8) + 77;
-        var y = 100 * Math.floor(p / 8) + 18;
-        ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(1 + p / 8), x, y);
-      }
-    }
-
-
-    // draw arrow // TODO: make this less messy
-    if (arrow != [] && !won) {
-
-      var arrow_tail_r = Math.floor(arrow[0]/8);
-      var arrow_tail_c = arrow[0] % 8;
-      var arrow_head_r = Math.floor(arrow[1]/8);
-      var arrow_head_c = arrow[1] % 8;
-
-      var arrow_tail_x = 0;
-      var arrow_tail_y = 0;
-      var arrow_head_x = 800;
-      var arrow_head_y = 800;
-
-      if (arrow_tail_c == arrow_head_c) { // vertical
-        arrow_tail_x = 50 + arrow_tail_c * 100;
-        arrow_head_x = 50 + arrow_tail_c * 100;
-      }
-      else if (arrow_tail_r == arrow_head_r) { // horizontal
-        arrow_tail_y = 50 + arrow_tail_r * 100;
-        arrow_head_y = 50 + arrow_tail_r * 100;
-      }
-      else {
-        var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
-        arrow_tail_x = arrow_tail_c * 100;
-        arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
-        arrow_head_x = arrow_head_c * 100 + 100;
-        arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
+      // add numbers
+      if (document.getElementById('numbered').checked) {
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "darkgrey";
+        for (p in board) {
+          var x = 100 * (p % 8) + 3;
+          var y = 100 * Math.floor(p / 8) + 97;
+          ctx.fillText(p, x, y);
+        }
       }
 
-      ctx.beginPath();
-      ctx.moveTo(arrow_tail_x, arrow_tail_y);
-      ctx.lineTo(arrow_head_x, arrow_head_y);
-      ctx.stroke();
+      // add labels
+      if (document.getElementById('labeled').checked) {
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "darkgrey";
+        for (p in board) {
+          var x = 100 * (p % 8) + 77;
+          var y = 100 * Math.floor(p / 8) + 18;
+          ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(1 + p / 8), x, y);
+        }
+      }
+
+
+      // draw arrow // TODO: make this less messy
+      if (arrow != [] && !won) {
+
+        var arrow_tail_r = Math.floor(arrow[0]/8);
+        var arrow_tail_c = arrow[0] % 8;
+        var arrow_head_r = Math.floor(arrow[1]/8);
+        var arrow_head_c = arrow[1] % 8;
+
+        var arrow_tail_x = 0;
+        var arrow_tail_y = 0;
+        var arrow_head_x = 800;
+        var arrow_head_y = 800;
+
+        if (arrow_tail_c == arrow_head_c) { // vertical
+          arrow_tail_x = 50 + arrow_tail_c * 100;
+          arrow_head_x = 50 + arrow_tail_c * 100;
+        }
+        else if (arrow_tail_r == arrow_head_r) { // horizontal
+          arrow_tail_y = 50 + arrow_tail_r * 100;
+          arrow_head_y = 50 + arrow_tail_r * 100;
+        }
+        else {
+          var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
+          arrow_tail_x = arrow_tail_c * 100;
+          arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
+          arrow_head_x = arrow_head_c * 100 + 100;
+          arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(arrow_tail_x, arrow_tail_y);
+        ctx.lineTo(arrow_head_x, arrow_head_y);
+        ctx.stroke();
+      }
+
+
+      if (won) {
+        var crown = new Image();
+        crown.onload = function() {
+          var p = player_pos[1 - current_player];
+          var x = 100 * (p % 8) + 20;
+          var y = 100 * Math.floor(p / 8) + 20;
+          ctx.drawImage(crown, x, y, 60, 60);
+        };
+        crown.src = "img/crown.png";
+      }
+
+
+      // if (won) {
+      //   // Create gradient
+      //   var grd = ctx.createRadialGradient(400,400,0,400,400,800);
+      //   grd.addColorStop(0,{0:"white", 1:"black"}[current_player]);
+      //   grd.addColorStop(1,"transparent");
+      //
+      //   // Fill with gradient
+      //   ctx.fillStyle = grd;
+      //   ctx.fillRect(0,0,800,800);
+      //
+      //   var winning_img = new Image();
+      //
+      //   winning_img.onload = function() {
+      //     ctx.drawImage(winning_img, 100, 100, 600, 600);
+      //   };
+      //   winning_img.src = {0:"img/white_wins.png", 1:"img/black_wins.png"}[1 - current_player];
+      // }
+
     }
-
-
-    if (won) {
-      var crown = new Image();
-      crown.onload = function() {
-        var p = player_pos[1 - current_player];
-        var x = 100 * (p % 8) + 20;
-        var y = 100 * Math.floor(p / 8) + 20;
-        ctx.drawImage(crown, x, y, 60, 60);
-      };
-      crown.src = "img/crown.png";
-    }
-
-
-    // if (won) {
-    //   // Create gradient
-    //   var grd = ctx.createRadialGradient(400,400,0,400,400,800);
-    //   grd.addColorStop(0,{0:"white", 1:"black"}[current_player]);
-    //   grd.addColorStop(1,"transparent");
-    //
-    //   // Fill with gradient
-    //   ctx.fillStyle = grd;
-    //   ctx.fillRect(0,0,800,800);
-    //
-    //   var winning_img = new Image();
-    //
-    //   winning_img.onload = function() {
-    //     ctx.drawImage(winning_img, 100, 100, 600, 600);
-    //   };
-    //   winning_img.src = {0:"img/white_wins.png", 1:"img/black_wins.png"}[1 - current_player];
-    // }
-
   }
 
 
