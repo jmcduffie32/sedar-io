@@ -276,6 +276,14 @@ function update_board() {
         }
       }
 
+    // add hover confirmation
+    if (document.getElementById('show_confirmation').checked && can_move_to(hover_loc)) {
+      var x = 100 * (hover_loc % 8) + 40;
+      var y = 100 * Math.floor(hover_loc / 8) + 40;
+      ctx.fillStyle = "lightgreen";
+      ctx.fillRect(x, y, 20, 20);
+    }
+
     // add numbers
     if (document.getElementById('numbered').checked) {
       ctx.font = "19px Arial";
@@ -334,6 +342,7 @@ function update_board() {
       ctx.stroke();
     }
 
+    // draw pre arrow
     if (document.getElementById('show_pre_arrow').checked) {
       // set pre arrow
       if (!won) {
@@ -445,7 +454,7 @@ function move_to(p) {
   var curr_y = player_xy[(current_player * 2) + 1];
   var distance = Math.sqrt(Math.pow((curr_x - x), 2) + Math.pow((curr_y - y), 2))
   var i = 0;
-  var one_over_speed = Math.floor(0.2 * distance);
+  var one_over_speed = Math.floor(0.25 * distance);
   var refreshIntervalId = setInterval(function() {
     player_xy[current_player * 2] = curr_x + (x - curr_x) * (i / one_over_speed);
     player_xy[(current_player * 2) + 1] = curr_y + (y - curr_y) * (i / one_over_speed);
@@ -470,7 +479,7 @@ function move_to(p) {
         comp_move();
       }
     }
-  }, 10);
+  }, 1);
 }
 
 
