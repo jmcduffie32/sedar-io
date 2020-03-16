@@ -3,8 +3,9 @@
   var canvas = document.getElementById("board");
   var ctx = canvas.getContext("2d");
 
-  var board;
-  var arrow;
+  var board = [];
+  var arrow = [];  // tail p, head p, slope, tail r, tail c, head r, head c
+  var temp_arrow = [];
   var player_pos;
 
   var current_player = 0;
@@ -52,7 +53,7 @@
 
   var loc = -1;
   function set_loc() {
-    var rect = canvas.getBoundingClientRect()
+    var rect = canvas.getBoundingClientRect();
     var USER_X = event.clientX - rect.left;
     var USER_Y = event.clientY - rect.top;
     var row = (USER_Y - (USER_Y % 100)) / 100;
@@ -61,9 +62,19 @@
     console.log("loc = ", loc);
   }
 
+  var hover_loc = -1;
+  canvas.addEventListener('mousemove', function(evt) {
+    var rect = canvas.getBoundingClientRect();
+    var x = evt.clientX - rect.left;
+    var y = evt.clientY - rect.top;
+    var row = (y - (y % 100)) / 100;
+    var col = (x - (x % 100)) / 100;
+    hover_loc = row * 8 + col;
+  });
+
   function clean_board() {
     board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    arrow = []; // tail p, head p, slope, tail r, tail c, head r, head c
+    arrow = [];
     player_pos = [];
     current_player = 0;
     won = false;
@@ -110,7 +121,7 @@
         arrow_head_r -= slope;
       }
     }
-    arrow = [arrow_tail_r * 8 + arrow_tail_c, arrow_head_r * 8 + arrow_head_c, slope, arrow_tail_r, arrow_tail_c, arrow_head_r, arrow_head_c];
+    return [arrow_tail_r * 8 + arrow_tail_c, arrow_head_r * 8 + arrow_head_c, slope, arrow_tail_r, arrow_tail_c, arrow_head_r, arrow_head_c];
   }
 
   function is_on_arrow(p) {
@@ -309,6 +320,42 @@
           arrow_head_y = 50 + arrow_tail_r * 100;
         }
         else {
+          var slope = arrow[2]; // arrow_tail_r < arrow_head_r ? -1 : 1;
+          arrow_tail_x = arrow_tail_c * 100;
+          arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
+          arrow_head_x = arrow_head_c * 100 + 100;
+          arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
+        }
+
+        ctx.strokeStyle = "black";
+        ctx.beginPath();
+        ctx.moveTo(arrow_tail_x, arrow_tail_y);
+        ctx.lineTo(arrow_head_x, arrow_head_y);
+        ctx.stroke();
+      }
+
+      // draw temp arrow // TODO: make this less messy
+      if (temp_arrow != []) {
+
+        var arrow_tail_r = Math.floor(temp_arrow[0]/8);
+        var arrow_tail_c = temp_arrow[0] % 8;
+        var arrow_head_r = Math.floor(temp_arrow[1]/8);
+        var arrow_head_c = temp_arrow[1] % 8;
+
+        var arrow_tail_x = 0;
+        var arrow_tail_y = 0;
+        var arrow_head_x = 800;
+        var arrow_head_y = 800;
+
+        if (arrow_tail_c == arrow_head_c) { // vertical
+          arrow_tail_x = 50 + arrow_tail_c * 100;
+          arrow_head_x = 50 + arrow_tail_c * 100;
+        }
+        else if (arrow_tail_r == arrow_head_r) { // horizontal
+          arrow_tail_y = 50 + arrow_tail_r * 100;
+          arrow_head_y = 50 + arrow_tail_r * 100;
+        }
+        else {
           var slope = arrow_tail_r < arrow_head_r ? -1 : 1;
           arrow_tail_x = arrow_tail_c * 100;
           arrow_tail_y = arrow_tail_r * 100 + 50 + (slope * 50);
@@ -316,11 +363,13 @@
           arrow_head_y = arrow_head_r * 100 + 50 - (slope * 50);
         }
 
+        ctx.strokeStyle = "grey";
         ctx.beginPath();
         ctx.moveTo(arrow_tail_x, arrow_tail_y);
         ctx.lineTo(arrow_head_x, arrow_head_y);
         ctx.stroke();
       }
+
 
       // queen pieces
       for (i in player_pos) {
@@ -376,6 +425,18 @@
   }
 
 
+  setInterval(set_temp_arrow, 100);
+  function set_temp_arrow() {
+    if (!won) {
+      if (can_move_to(hover_loc)) {
+        temp_arrow = arrowize(player_pos[current_player], hover_loc);
+      }
+      else {
+        temp_arrow = [];
+      }
+      update_board();
+    }
+  }
 
 
   function move_to(p) {
@@ -383,7 +444,7 @@
     board[player_pos[current_player]] = 1;
 
     // update arrow
-    arrowize(player_pos[current_player], p);
+    arrow = arrowize(player_pos[current_player], p);
 
     // move current player
     board[p] = current_player + 2;

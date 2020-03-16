@@ -116,7 +116,7 @@
       <div class="row">
         <div class="col-lg-9">
           <div class="bg-shadow center-block panel">
-            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"></canvas>
+            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"</canvas>
           </div>
         </div>
         <div class="col-lg-3">
@@ -225,7 +225,7 @@
             <div class="panel dark" style="padding:10px;">
               <div class="panel-heading panel-title">
                 <a data-toggle="collapse" href="#collapse">
-                  <h3 class="text-center panel-title">Display Settings</h3>
+                  <h3 class="text-center panel-title">Display & Sound</h3>
                 </a>
               </div>
               <div id="collapse" class="panel-collapse collapse">
@@ -274,43 +274,11 @@
 
 
 
-    <script>
-
-      var audio = new Audio('Sedario.mp3');
-      var playing = false;
-      audio.volume = 0.1;
-      audio.addEventListener('ended', function() {
-          this.currentTime = 0;
-          this.play();
-      }, false);
-
-      function toggle_music() {
-        if (playing) {
-          audio.pause();
-          document.getElementById("music-button").innerHTML = 'PLAY';
-          playing = false;
-
-        }
-        else {
-          audio.play();
-          document.getElementById("music-button").innerHTML = 'PAUSE';
-          playing = true;
-        }
-      }
-
-      function start_music() {
-        if (!playing) {
-          toggle_music();
-        }
-      }
-
-    </script>
-
+    <script src="js/music.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/AI.js"></script>
-    <script src="js/score.js">
+    <script src="js/score.js"></script>
 
-    </script>
 
 
   </body>
