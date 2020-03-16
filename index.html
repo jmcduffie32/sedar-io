@@ -9,12 +9,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-
-    <link rel="apple-touch-icon" href="touch-icons/apple-touch-icon-iphone-60x60.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="touch-icons/apple-touch-icon-ipad-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="touch-icons/apple-touch-icon-iphone-retina-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="touch-icons/apple-touch-icon-ipad-retina-152x152.png">
-
     <style>
 
         *, a, a:hover, h1 {
@@ -57,20 +51,27 @@
         }
 
         .score-btn {
-          background-color:transparent;
           padding-top:0px;
           padding-bottom:5px;
         }
 
-        .score-btn:hover > h1 {
+        .dark-button {
+          border: 1px solid lightgrey;
+          background-color: transparent;
+          color: lightgrey;
+        }
+
+        .dark-button:hover {
+          background-color: lightgrey;
+        }
+
+        .dark-button:focus *, .dark-button:hover *, .dark-button:active * {
           color: #3F3F3F;
         }
 
-        .score-btn:focus > h1 {
-          color: #3F3F3F;
-        }
 
     </style>
+
 
   </head>
   <body style="min-width:840px;" onload="set_color();">
@@ -121,19 +122,19 @@
         <div class="col-lg-3">
           <div class="row">
             <div class="panel dark" style="padding:10px;">
-              <h3 class="text-center">Score Counter</h4><br>
+              <h4 class="text-center">Score Counter</h4><br>
               <div class="row">
                 <div class="col-sm-6">
                   <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">White</h4>
                   <h1 class="text-center" id="white-score">0</h1>
                   <div class="row">
                     <div class="col-sm-6">
-                      <button class="btn btn-lg btn-default score-btn center-block" onclick="down_white();">
+                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_white();">
                         <h1 class="text-center" style="margin:0px;">-</h1>
                       </button>
                     </div>
                     <div class="col-sm-6" style="padding:0px 5px">
-                      <button class="btn btn-lg btn-default score-btn center-block" onclick="up_white();">
+                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_white();">
                         <h1 class="text-center" style="margin:0px">+</h1>
                       </button>
                     </div>
@@ -144,12 +145,12 @@
                   <h1 class="text-center" id="black-score">0</h1>
                   <div class="row">
                     <div class="col-sm-6">
-                      <button class="btn btn-lg btn-default score-btn center-block" onclick="down_black();">
+                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_black();">
                         <h1 class="text-center" style="margin:0px;">-</h1>
                       </button>
                     </div>
                     <div class="col-sm-6" style="padding:0px 5px">
-                      <button class="btn btn-lg btn-default score-btn center-block" onclick="up_black();">
+                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_black();">
                         <h1 class="text-center" style="margin:0px">+</h1>
                       </button>
                     </div>
@@ -158,7 +159,7 @@
               </div>
             </div>
             <div class="panel dark" style="padding:10px;">
-              <h3 class="text-center">Game Settings</h3><br>
+              <h4 class="text-center">Game Settings</h4><br>
               <label>
                 <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
               </label>
@@ -228,15 +229,18 @@
                 </a>
               </div>
               <div id="collapse" class="panel-collapse collapse">
-                <h5>Board Color:</h5>
+                <br>
+                Game music: <button class="btn dark-button btn-default" onclick="toggle_music();" id="music-button" style="padding:3px 6px;">PLAY</button>
+                <!-- <h5>Board Color:</h5>
                 <div class="row">
                   <div class="col-xs-8">
                     <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
                   </div>
                   <div class="col-xs-4">
-                    <button class="btn btn-default btn-block" onclick="set_color();">Set</button>
+                    <button class="btn btn-default btn-block dark-button" onclick="set_color();">Set</button>
                   </div>
-                </div>
+                </div> -->
+                <br>
                 <br>
                 <label>
                   <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions" onclick="update_board();"> Show suggestions
@@ -269,27 +273,39 @@
     </div>
 
 
-    <script src="js/engine.js"></script>
-    <script src="js/AI.js"></script>
 
     <script>
-      function up_white() {
-        var curr = Number(document.getElementById("white-score").innerHTML);
-        document.getElementById("white-score").innerHTML = curr + 1;
+
+      var audio = new Audio('Sedario.mp3');
+      var playing = false;
+      audio.volume = 0.1;
+      audio.addEventListener('ended', function() {
+          this.currentTime = 0;
+          this.play();
+      }, false);
+
+      function toggle_music() {
+        if (playing) {
+          audio.pause();
+          document.getElementById("music-button").innerHTML = 'PLAY';
+          playing = false;
+
+        }
+        else {
+          audio.play();
+          document.getElementById("music-button").innerHTML = 'PAUSE';
+          playing = true;
+        }
       }
-      function up_black() {
-        var curr = Number(document.getElementById("black-score").innerHTML);
-        document.getElementById("black-score").innerHTML = curr + 1;
-      }
-      function down_white() {
-        var curr = Number(document.getElementById("white-score").innerHTML);
-        document.getElementById("white-score").innerHTML =  curr > 0 ? curr - 1 : curr;
-      }
-      function down_black() {
-        var curr = Number(document.getElementById("black-score").innerHTML);
-        document.getElementById("black-score").innerHTML =  curr > 0 ? curr - 1 : curr;
-      }
+
     </script>
+
+    <script src="js/engine.js"></script>
+    <script src="js/AI.js"></script>
+    <script src="js/score.js">
+
+    </script>
+
 
   </body>
 </html>

@@ -18,7 +18,7 @@
 
 
   function set_color() {
-    document.getElementById('board').style.backgroundColor = document.getElementById('color').value;
+    document.getElementById('board').style.backgroundColor = '#c7f9fc'; // document.getElementById('color').value;
   }
 
   function start_game() {
@@ -47,6 +47,7 @@
       }
     }
     update_board();
+    toggle_music();
   }
 
   var loc = -1;
