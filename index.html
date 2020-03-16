@@ -43,8 +43,7 @@
         }
 
         .score-btn {
-          padding-top:0px;
-          padding-bottom:5px;
+          padding:0px 10px 5px;
         }
 
         .dark-button {
@@ -70,6 +69,16 @@
           color: lightgrey;
         }
 
+        div.btn-group {
+            margin: 0 auto;
+            text-align: center;
+            width: inherit;
+            display: inline-block;
+        }
+
+        .btn-group-wrap {
+            text-align: center;
+        }
 
     </style>
 
@@ -123,132 +132,128 @@
         <div class="col-lg-3">
           <div class="row">
             <div class="panel dark" style="padding:10px;">
-              <h4 class="text-center">Score Counter</h4><br>
-              <div class="row">
-                <div class="col-sm-6">
-                  <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">White</h4>
-                  <h1 class="text-center" id="white-score">0</h1>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_white();">
-                        <h1 class="text-center" style="margin:0px;">-</h1>
-                      </button>
-                    </div>
-                    <div class="col-sm-6" style="padding:0px 5px">
-                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_white();">
-                        <h1 class="text-center" style="margin:0px">+</h1>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">Black</h4>
-                  <h1 class="text-center" id="black-score">0</h1>
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_black();">
-                        <h1 class="text-center" style="margin:0px;">-</h1>
-                      </button>
-                    </div>
-                    <div class="col-sm-6" style="padding:0px 5px">
-                      <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_black();">
-                        <h1 class="text-center" style="margin:0px">+</h1>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button class="btn dark-button btn-default center-block" onclick="reset_scores();" style="padding:3px 6px; margin-top:15px;">Reset</button>
-            </div>
-            <div class="panel dark" style="padding:10px;">
-              <h4 class="text-center">Game Settings</h4><br>
-              <label>
-                <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
-              </label>
-              <h5>Mode:</h5>
-              <label class="radio-inline">
-                <input type="radio" name="mode" value="human" checked>Two-Player
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="mode" value="computer" checked>Computer
-              </label>
-              <h5>Computer Color:</h5>
-              <label class="radio-inline">
-                <input type="radio" name="comp_color" value="white">white
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="comp_color" value="black" checked>black
-              </label>
-              <h5>Computer Difficulty:</h5>
-              <label class="radio-inline">
-                <input type="radio" name="diff" value="0"><a data-toggle="tooltip" data-placement="right" title="(first possible move)">0</a>&emsp;
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="diff" value="1"><a data-toggle="tooltip" data-placement="right" title="(random)">1</a>&emsp;
-              </label>
-
-              <label class="radio-inline">
-                <input type="radio" name="diff" value="2"><a data-toggle="tooltip" data-placement="right" title="(+one step & min opp mobility)">2</a>&emsp;
-              </label>
-
-              <label class="radio-inline">
-                <input type="radio" name="diff" value="3" checked><a data-toggle="tooltip" data-placement="right" title="(2 & max play mobility)">3</a>&emsp;
-              </label>
-
-              <label class="radio-inline">
-                <input type="radio" name="diff" value="4"><a data-toggle="tooltip" data-placement="right" title="(chaser)">4</a>&emsp;
-              </label>
-              <br>
-              <br>
-              <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
-                Start
-              </button>
-            </div>
-            <div class="panel dark" style="padding:10px;">
-              <div class="panel-heading panel-title">
-                <a data-toggle="collapse" href="#collapse">
-                  <h3 class="text-center panel-title">Display & Sound</h3>
-                </a>
-              </div>
-              <div id="collapse" class="panel-collapse collapse">
-                <br>
-                Game music: <button class="btn dark-button btn-default" onclick="toggle_music();" id="music-button" style="padding:3px 6px;">PLAY</button>
-                <!-- <h5>Board Color:</h5>
+                <h4 class="text-center">Score Counter</h4><br>
                 <div class="row">
-                  <div class="col-xs-8">
-                    <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
+                  <div class="col-xs-6">
+                    <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">White</h4>
+                    <h1 class="text-center" id="white-score" style="margin-bottom:20px">0</h1>
+                    <div class="btn-group-wrap">
+                      <div class="btn-group center-block">
+                        <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_white();">
+                          <h1 class="text-center" style="margin:0px;">-</h1>
+                        </button>
+                        <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_white();">
+                          <h1 class="text-center" style="margin:0px">+</h1>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-default btn-block dark-button" onclick="set_color();">Set</button>
+                  <div class="col-xs-6">
+                    <h4 class="text-center" style="margin-top:0px; margin-bottom:0px">Black</h4>
+                    <h1 class="text-center" id="black-score" style="margin-bottom:20px">0</h1>
+                    <div class="btn-group-wrap">
+                      <div class="btn-group center-block">
+                        <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="down_black();">
+                          <h1 class="text-center" style="margin:0px;">-</h1>
+                        </button>
+                        <button class="btn btn-lg btn-default score-btn center-block dark-button" onclick="up_black();">
+                          <h1 class="text-center" style="margin:0px">+</h1>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div> -->
-                <br>
-                <br>
-                <label>
-                  <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions"> Show Suggestions
-                </label>
-                <br>
-                <label>
-                  <input type="checkbox" name="show_confirmation" value="show_confirmation" id="show_confirmation"> Show Hover Confirmation
-                </label>
-                <br>
-                <label>
-                  <input type="checkbox" name="show_pre_arrow" value="show_pre_arrow" id="show_pre_arrow" checked> Show Preview Arrow
-                </label>
-                <br>
-                <label>
-                  <input type="checkbox" name="labeled" value="ghost" id="ghost"> Show Hover Piece
-                </label>
-                <br>
-                <label>
-                  <input type="checkbox" name="numbered" value="numbered" id="numbered"> Show Numbers
-                </label>
-                <br>
-                <label>
-                  <input type="checkbox" name="labeled" value="labeled" id="labeled"> Show Labels
-                </label>
+                </div>
+                <button class="btn dark-button btn-default center-block" onclick="reset_scores();" style="padding:3px 6px; margin-top:15px;">Reset</button>
               </div>
-            </div>
+            <div class="panel dark" style="padding:10px;">
+                <h4 class="text-center">Game Settings</h4><br>
+                <label>
+                  <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
+                </label>
+                <h5>Mode:</h5>
+                <label class="radio-inline">
+                  <input type="radio" name="mode" value="human" checked>Two-Player
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="mode" value="computer" checked>Computer
+                </label>
+                <h5>Computer Color:</h5>
+                <label class="radio-inline">
+                  <input type="radio" name="comp_color" value="white">white
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="comp_color" value="black" checked>black
+                </label>
+                <h5>Computer Difficulty:</h5>
+                <label class="radio-inline">
+                  <input type="radio" name="diff" value="0"><a data-toggle="tooltip" data-placement="right" title="(first possible move)">0</a>&emsp;
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="diff" value="1"><a data-toggle="tooltip" data-placement="right" title="(random)">1</a>&emsp;
+                </label>
+
+                <label class="radio-inline">
+                  <input type="radio" name="diff" value="2"><a data-toggle="tooltip" data-placement="right" title="(+one step & min opp mobility)">2</a>&emsp;
+                </label>
+
+                <label class="radio-inline">
+                  <input type="radio" name="diff" value="3" checked><a data-toggle="tooltip" data-placement="right" title="(2 & max play mobility)">3</a>&emsp;
+                </label>
+
+                <label class="radio-inline">
+                  <input type="radio" name="diff" value="4"><a data-toggle="tooltip" data-placement="right" title="(chaser)">4</a>&emsp;
+                </label>
+                <br>
+                <br>
+                <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
+                  Start
+                </button>
+              </div>
+            <div class="panel dark" style="padding:10px;">
+                <div class="panel-heading panel-title">
+                  <a data-toggle="collapse" href="#collapse">
+                    <h3 class="text-center panel-title">Display & Sound</h3>
+                  </a>
+                </div>
+                <div id="collapse" class="panel-collapse collapse">
+                  <br>
+                  Game music: <button class="btn dark-button btn-default" onclick="toggle_music();" id="music-button" style="padding:3px 6px;">PLAY</button>
+                  <!-- <h5>Board Color:</h5>
+                  <div class="row">
+                    <div class="col-xs-8">
+                      <input type="color" style="width:150px; height:30px; border:0px;" value="#c7f9fc" id="color">
+                    </div>
+                    <div class="col-xs-4">
+                      <button class="btn btn-default btn-block dark-button" onclick="set_color();">Set</button>
+                    </div>
+                  </div> -->
+                  <br>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="show_suggestions" value="show_suggestions" id="show_suggestions"> Show Suggestions
+                  </label>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="show_confirmation" value="show_confirmation" id="show_confirmation"> Show Hover Confirmation
+                  </label>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="show_pre_arrow" value="show_pre_arrow" id="show_pre_arrow" checked> Show Preview Arrow
+                  </label>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="labeled" value="ghost" id="ghost"> Show Hover Piece
+                  </label>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="numbered" value="numbered" id="numbered"> Show Numbers
+                  </label>
+                  <br>
+                  <label>
+                    <input type="checkbox" name="labeled" value="labeled" id="labeled"> Show Labels
+                  </label>
+                </div>
+              </div>
             <a data-toggle="modal" data-target="#myModal" style="font-size:10pt" href=""><u>Learn to Play!</u></a>
           </div>
         </div>
