@@ -14,3 +14,7 @@ function down_black() {
   var curr = Number(document.getElementById("black-score").innerHTML);
   document.getElementById("black-score").innerHTML =  curr > 0 ? curr - 1 : curr;
 }
+function reset_scores() {
+  document.getElementById("white-score").innerHTML =  0;
+  document.getElementById("black-score").innerHTML =  0;
+}
