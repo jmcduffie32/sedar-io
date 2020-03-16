@@ -5,7 +5,7 @@ var ctx = canvas.getContext("2d");
 
 var board = [];
 var arrow = [];  // tail p, head p, slope, tail r, tail c, head r, head c
-var temp_arrow = [];
+var pre_arrow = [];
 var player_pos = [];
 var player_xy = []; // white_x, white_y, black_x, black_y
 
@@ -334,22 +334,23 @@ function update_board() {
       ctx.stroke();
     }
 
-    // set temp arrow
-    if (!won) {
-      if (can_move_to(hover_loc)) {
-        temp_arrow = arrowize(player_pos[current_player], hover_loc);
+    if (document.getElementById('show_pre_arrow').checked) {
+      // set pre arrow
+      if (!won) {
+        if (can_move_to(hover_loc)) {
+          pre_arrow = arrowize(player_pos[current_player], hover_loc);
+        }
+        else {
+          pre_arrow = [];
+        }
       }
-      else {
-        temp_arrow = [];
-      }
-    }
-    // draw temp arrow // TODO: make this less messy
-    if (temp_arrow != []) {
+      // draw pre arrow // TODO: make this less messy
+      if (pre_arrow != []) {
 
-      var arrow_tail_r = Math.floor(temp_arrow[0]/8);
-      var arrow_tail_c = temp_arrow[0] % 8;
-      var arrow_head_r = Math.floor(temp_arrow[1]/8);
-      var arrow_head_c = temp_arrow[1] % 8;
+      var arrow_tail_r = Math.floor(pre_arrow[0]/8);
+      var arrow_tail_c = pre_arrow[0] % 8;
+      var arrow_head_r = Math.floor(pre_arrow[1]/8);
+      var arrow_head_c = pre_arrow[1] % 8;
 
       var arrow_tail_x = 0;
       var arrow_tail_y = 0;
@@ -377,6 +378,7 @@ function update_board() {
       ctx.moveTo(arrow_tail_x, arrow_tail_y);
       ctx.lineTo(arrow_head_x, arrow_head_y);
       ctx.stroke();
+    }
     }
 
     // queen pieces
@@ -420,6 +422,7 @@ function update_board() {
 
   }
 }
+
 
 function move_to(p) {
   // add block piece
