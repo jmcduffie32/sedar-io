@@ -47,7 +47,7 @@
       }
     }
     update_board();
-    toggle_music();
+    start_music();
   }
 
   var loc = -1;
