@@ -125,7 +125,7 @@ function arrowize(p1,p2) {
   return [arrow_tail_r * 8 + arrow_tail_c, arrow_head_r * 8 + arrow_head_c, slope, arrow_tail_r, arrow_tail_c, arrow_head_r, arrow_head_c];
 }
 
-function is_on_arrow(p) {
+function is_on_arrow(arrow, p) {
   if (arrow == []) {
     return false;
   }
@@ -277,7 +277,7 @@ function update_board() {
       }
 
     // add hover confirmation
-    if (document.getElementById('show_confirmation').checked && can_move_to(hover_loc)) {
+    if (document.getElementById('show_confirmation').checked && can_move_to(hover_loc) && player_pos.length == 2) {
       var x = 100 * (hover_loc % 8) + 40;
       var y = 100 * Math.floor(hover_loc / 8) + 40;
       ctx.fillStyle = "lightgreen";
@@ -348,6 +348,9 @@ function update_board() {
       if (!won) {
         if (can_move_to(hover_loc)) {
           pre_arrow = arrowize(player_pos[current_player], hover_loc);
+          if (is_on_arrow(pre_arrow, player_pos[1 - current_player]) || player_pos.length < 2) {
+            pre_arrow = [];
+          }
         }
         else {
           pre_arrow = [];
@@ -444,9 +447,12 @@ function move_to(p) {
   board[p] = current_player + 2;
   player_pos[current_player] = p;
 
+  if (is_on_arrow(arrow, p)) {
+    arrow = [];
+  }
+
   var x = 100 * (p % 8) + 50;
   var y = 100 * Math.floor(p / 8) + 50;
-
 
   // animate move
   moving = true;
@@ -466,10 +472,6 @@ function move_to(p) {
 
       // switch player
       current_player = 1 - current_player;
-
-      if (is_on_arrow(player_pos[0]) && is_on_arrow(player_pos[1])) {
-        arrow = [];
-      }
 
       won = get_possible_moves().length == 0;
       update_board(); // this is becuase the auto update_board stops on a win
@@ -506,14 +508,19 @@ function game_step() {
 
     // no pieces are placed, so place white
     if (custom_start && player_pos.length == 0) {
+      console.log("here");
       board[loc] = 2;
       player_pos.push(loc);
+      player_xy[0] = 100 * (loc % 8) + 50;
+      player_xy[1] = 100 * Math.floor(loc / 8) + 50;
     }
 
     // only white is on the board, so place black
     else if (custom_start && player_pos.length == 1 && loc != player_pos[0]) {
       board[loc] = 3;
       player_pos.push(loc);
+      player_xy[2] = 100 * (loc % 8) + 50;
+      player_xy[3] = 100 * Math.floor(loc / 8) + 50;
       if ((mode == "computer") && (comp_color == "white")) {
         comp_move();
       }
