@@ -412,13 +412,13 @@ function update_board() {
       ctx.fill();
     }
 
-    // hover ghost piece
-    if (document.getElementById('ghost').checked && current_player != {"white":0, "black":1}[comp_color] && !won && hover_xy[0] > 10 && hover_xy[1] > 10 && hover_xy[0] < 790 && hover_xy[1] < 790) {
-      ctx.fillStyle = {0:"rgb(255,255,255,.5)", 1:"rgb(0,0,0,.5)"}[current_player];
-      ctx.beginPath();
-      ctx.arc(hover_xy[0], hover_xy[1], 40, 0, 2 * Math.PI, false);
-      ctx.fill();
-    }
+    // // hover ghost piece
+    // if (document.getElementById('ghost').checked && !(mode == "computer" && current_player == {"white":0, "black":1}[comp_color] && current_pos.length == 2) && !won && hover_xy[0] > 10 && hover_xy[1] > 10 && hover_xy[0] < 790 && hover_xy[1] < 790) {
+    //   ctx.fillStyle = {0:"rgb(255,255,255,.5)", 1:"rgb(0,0,0,.5)"}[current_player];
+    //   ctx.beginPath();
+    //   ctx.arc(hover_xy[0], hover_xy[1], 40, 0, 2 * Math.PI, false);
+    //   ctx.fill();
+    // }
 
     // crown
     if (won) {
@@ -513,6 +513,7 @@ function game_step() {
       player_pos.push(loc);
       player_xy[0] = 100 * (loc % 8) + 50;
       player_xy[1] = 100 * Math.floor(loc / 8) + 50;
+      current_player = 1;
     }
 
     // only white is on the board, so place black
@@ -524,6 +525,7 @@ function game_step() {
       if ((mode == "computer") && (comp_color == "white")) {
         comp_move();
       }
+      current_player = 0;
     }
 
     // both pieces are placed

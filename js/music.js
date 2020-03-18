@@ -1,3 +1,5 @@
+
+
 var audio = new Audio('Sedario.mp3');
 var playing = false;
 audio.volume = 0.1;
@@ -21,7 +23,7 @@ function toggle_music() {
 }
 
 function start_music() {
-  if (!playing) {
+  if (!playing && audio.currentTime == 0) {
     toggle_music();
   }
 }
