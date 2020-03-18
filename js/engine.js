@@ -447,7 +447,7 @@ function move_to(p) {
   board[p] = current_player + 2;
   player_pos[current_player] = p;
 
-  if (is_on_arrow(arrow, p)) {
+  if (is_on_arrow(arrow, player_pos[1 - current_player])) {
     arrow = [];
   }
 
