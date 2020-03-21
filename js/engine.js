@@ -243,7 +243,7 @@ function update_board() {
     ctx.clearRect(0, 0, 800, 800);
 
     // add the grid lines
-    ctx.fillStyle = "darkgrey";
+    ctx.fillStyle = "lightgrey";
     for (var i = 1; i < 8; i++) {
       ctx.fillRect(0, i * 100, 800, 2);
       ctx.fillRect(i * 100, 0, 2, 800);
@@ -253,7 +253,7 @@ function update_board() {
     for (p in board) {
         var mark = board[p];
 
-        ctx.fillStyle = "lightgrey";
+        ctx.fillStyle = "#547172";
         var x = 100 * (p % 8);
         var y = 100 * Math.floor(p / 8);
 
@@ -397,9 +397,17 @@ function update_board() {
     for (i in player_pos) {
       var color = {0:"white", 1:"black"}[i];
       ctx.fillStyle = color;
+      ctx.shadowColor = "grey";
+      ctx.shadowBlur = 7;
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 4;
       ctx.beginPath();
       ctx.arc(player_xy[2 * i], player_xy[2 * i + 1], 40, 0, 2 * Math.PI, false);
       ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
     }
 
     // add red current player dot
@@ -539,4 +547,4 @@ function game_step() {
 
 
 
-setInterval(function () {if (!won) {update_board()}}, 1);
+setInterval(function () {if (!won) {update_board()}}, 10);
