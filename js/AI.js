@@ -186,6 +186,11 @@ class state {
 }
 
 
+function first_possible_move(board, arrow, player_pos, current_player) {
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var possible_moves = game_state.get_possible_moves();
+  return possible_moves[0];
+}
 
 
 function random_play(board, arrow, player_pos, current_player) {
@@ -320,3 +325,24 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
   }
   return best_child.player_pos[best_child.current_player];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var all_AI_list = [first_possible_move, // 0
+                   random_play, // 1
+                   min_opp_mobility, // 2
+                   max_play_mobility, // 3
+                   chaser, // 4
+                   min_opp_and_max_play_mobility // 5
+                 ];

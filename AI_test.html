@@ -17,12 +17,15 @@
         font-family: monospace;
       }
 
-      div.panel-body {
+      div.console-out {
         background-color: black !important;
         color: white;
         padding-left: 3px;
       }
 
+      h3 {
+        margin-top:10px;
+      }
 
     </style>
 
@@ -55,19 +58,93 @@
                   <button type="button" class="btn btn-primary" onclick="run();">run()</button>
                 </div>
                 <div class="col-md-6 text-right">
-                  <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('o').innerHTML='>>> ';">Clear</button>
+                  <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('run').innerHTML='>>> ';">Clear</button>
                 </div>
               </div>
             </div>
-            <div class="panel-body">
-              <p id="o">>>> </p>
+            <div class="panel-body console-out">
+              <p id="run">>>> </p>
             </div>
           </div>
 
 
-
-
-
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary" onclick="fight();">fight()</button>
+                </div>
+                <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('fight').innerHTML='>>> ';">Reset</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h5>White</h5>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="0">first possible move (0)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="1">random (1)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="2">min opp mobility (2)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="3">max play mobility (3)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="4">chaser (4)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="white" value="5" checked>2 and 3 (5)
+                  </label>
+                </div>
+                <div class="col-md-4">
+                  <h5>Black</h5>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="0">first possible move (0)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="1">random (1)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="2">min opp mobility (2)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="3">max play mobility (3)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="4">chaser (4)
+                  </label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" name="black" value="5" checked>2 and 3 (5)
+                  </label>
+                </div>
+                <div class="col-md-4">
+                  <label class="radio-inline">
+                    Number of games to play: <input type="text" id="numGames" value="100"></input>
+                  </label>
+                </div>
+              </div>
+              <br><br>
+              <div class="console-out">
+                <p id="fight">>>> </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

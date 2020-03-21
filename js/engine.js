@@ -219,24 +219,7 @@ function get_comp_move() {
   if (possible_moves.length == 0) {
     return -1;
   }
-  if (diff == 0) {
-    return possible_moves[0];
-  }
-  if (diff == 1) {
-    return random_play(board, arrow, player_pos, current_player);
-  }
-  if (diff == 2) {
-    return min_opp_mobility(board, arrow, player_pos, current_player);
-  }
-  if (diff == 3) {
-    return max_play_mobility(board, arrow, player_pos, current_player);
-  }
-  if (diff == 4) {
-    return chaser(board, arrow, player_pos, current_player);
-  }
-  if (diff == 5) {
-    return min_opp_and_max_play_mobility(board, arrow, player_pos, current_player);
-  }
+  return all_AI_list[diff](board, arrow, player_pos, current_player);
 }
 
 
@@ -489,6 +472,7 @@ function move_to(p) {
       i++;
     } else { // TODO make this less messy: once the piece stops moving, the player is switched. If computer mode is one, make the computer move
       moving = false;
+
       clearInterval(refreshIntervalId);
 
       // switch player
