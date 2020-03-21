@@ -226,7 +226,6 @@ function min_opp_mobility(board, arrow, player_pos, current_player) {
 
 
 
-
 /**
     min_opp_and_max_play_mobility is a player that makes move based off
     maximizing the player's mobility after this move.
@@ -362,10 +361,10 @@ var empty_board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 
 
-function play_game(white_func, black_func) {
- var game_state = new state(empty_board, [], [3, 60], 0);
- game_state.board[3] = 2;
- game_state.board[60] = 3;
+function play_game(white_func, black_func, white_start, black_start) {
+ var game_state = new state(empty_board, [], [white_start, black_start], 0);
+ game_state.board[white_start] = 2;
+ game_state.board[black_start] = 3;
  while (game_state.get_possible_moves().length != 0) { // while game is not over
    if (game_state.current_player == 0) {
      var move = white_func(game_state.board, game_state.arrow, game_state.player_pos, game_state.current_player);
@@ -379,6 +378,11 @@ function play_game(white_func, black_func) {
 
 
 
+
+
+
+
+
 function fight() {
  document.getElementById('fight').innerHTML = ">>> loading...";
  var white_num = document.querySelector('input[name="white"]:checked').value;
@@ -387,10 +391,12 @@ function fight() {
  black_func = all_AI_list[black_num];
 
  var num_games = document.getElementById('numGames').value;
+ var white_start = document.getElementById('white_start').value;
+ var black_start = document.getElementById('black_start').value;
 
  var num_white_wins = 0;
  for (i in [...Array(Number(num_games))]) {
-   num_white_wins += play_game(white_func, black_func) == 0 ? 1 : 0;
+   num_white_wins += play_game(white_func, black_func, white_start, black_start) == 0 ? 1 : 0;
  }
 
  document.getElementById('fight').innerHTML = "White (" + white_num + ") wins: " + num_white_wins + " (" + (num_white_wins * 100 / num_games) + "%)<br>" + "Black (" + black_num + ") wins: " + (num_games - num_white_wins) + " (" + ((num_games - num_white_wins) * 100 / num_games) + "%)" ;
@@ -418,7 +424,7 @@ function run() {
    var win_rate = 0;
    for (i in [...Array(300)]) { // play 300 games per alpha setting
      player_1_func = Math.random() <= alpha ? min_opp_and_max_play_mobility: chaser;
-     if (play_game(player_1_func, random_play) == 0) { // if white win
+     if (play_game(player_1_func, random_play, 3, 60) == 0) { // if white win
        win_rate++;
      }
    }
