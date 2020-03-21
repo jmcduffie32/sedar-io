@@ -243,7 +243,7 @@ function update_board() {
     ctx.clearRect(0, 0, 800, 800);
 
     // add the grid lines
-    ctx.fillStyle = "lightgrey";
+    ctx.fillStyle = "darkgrey";
     for (var i = 1; i < 8; i++) {
       ctx.fillRect(0, i * 100, 800, 2);
       ctx.fillRect(i * 100, 0, 2, 800);
@@ -259,7 +259,7 @@ function update_board() {
 
         // block piece
         if (mark == 1) {
-          ctx.fillRect(x, y, 100, 100);
+          ctx.fillRect(x + 2, y + 2, 98, 98);
         }
 
         // suggestion squares
