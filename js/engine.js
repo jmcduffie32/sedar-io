@@ -223,16 +223,19 @@ function get_comp_move() {
     return possible_moves[0];
   }
   if (diff == 1) {
-    return possible_moves[Math.floor(Math.random() * possible_moves.length)];
+    return random_play(board, arrow, player_pos, current_player);
   }
   if (diff == 2) {
     return min_opp_mobility(board, arrow, player_pos, current_player);
   }
   if (diff == 3) {
-    return min_opp_and_max_play_mobility(board, arrow, player_pos, current_player);
+    return max_play_mobility(board, arrow, player_pos, current_player);
   }
   if (diff == 4) {
     return chaser(board, arrow, player_pos, current_player);
+  }
+  if (diff == 5) {
+    return min_opp_and_max_play_mobility(board, arrow, player_pos, current_player);
   }
 }
 

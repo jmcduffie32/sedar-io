@@ -3,6 +3,7 @@
 
 
 class state {
+
   constructor(board, arrow, player_pos, current_player) {
     this.board = [...board];
     this.arrow = [...arrow];
@@ -167,7 +168,7 @@ class state {
   }
 
   clone() {
-    return new state([...board], [...arrow], [...player_pos], current_player);
+    return new state([...this.board], [...this.arrow], [...this.player_pos], this.current_player);
   }
 
   expand() {
@@ -185,6 +186,13 @@ class state {
 }
 
 
+
+
+function random_play(board, arrow, player_pos, current_player) {
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var possible_moves = game_state.get_possible_moves();
+  return possible_moves[Math.floor(Math.random() * possible_moves.length)];
+}
 
 
 /**
@@ -212,32 +220,36 @@ function min_opp_mobility(board, arrow, player_pos, current_player) {
 }
 
 
+
+
 /**
     min_opp_and_max_play_mobility is a player that makes move based off
-    of restructing the mobility of the opponent on their next turn and
     maximizing the player's mobility after this move.
 **/
-function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player) {
+function max_play_mobility(board, arrow, player_pos, current_player) {
   var game_state = new state(board, arrow, player_pos, current_player);
-  var val = Infinity;
+  var val = 0;
   var best_child = null;
   var children = game_state.expand();
   for (var i in children) {
     var child = children[i];
     var opponent_moves = child.get_possible_moves();
     var opponent_move_count = opponent_moves.length; // how many moves the other player will have
-    if (opponent_move_count == 0) {
+    if (opponent_move_count == 0) { // opponent has no moves
       return child.player_pos[1 - child.current_player]; // return since it is a winning move
-    }
-    child.move_to(child.player_pos[child.current_player]); // have the opponent stay where they are
-    var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
-    var count = opponent_move_count + player_move_count;
-    if (count < val) { // if this is better than old move, then update
-      val = count;
-      best_child = child;
+    } else { // opponent has moves to make
+      opponents_moves_children = child.expand();
+      for (var j in opponents_moves_children) {
+        var opp_child = opponents_moves_children[j];
+        var player_move_count = opp_child.get_possible_moves().length; // how many moves you have
+        if (player_move_count >= val) {
+          val = player_move_count;
+          best_child = child;
+        }
+      }
     }
   }
-  return best_child.player_pos[best_child.current_player];
+  return best_child.player_pos[1 - best_child.current_player];
 }
 
 
@@ -277,4 +289,34 @@ function chaser(board, arrow, player_pos, current_player) {
     }
   }
   return best_child.player_pos[1 - best_child.current_player];
+}
+
+
+
+/**
+    min_opp_and_max_play_mobility is a player that makes move based off
+    of restructing the mobility of the opponent on their next turn and
+    maximizing the player's mobility after this move.
+**/
+function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player) {
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var val = Infinity;
+  var best_child = null;
+  var children = game_state.expand();
+  for (var i in children) {
+    var child = children[i];
+    var opponent_moves = child.get_possible_moves();
+    var opponent_move_count = opponent_moves.length; // how many moves the other player will have
+    if (opponent_move_count == 0) {
+      return child.player_pos[1 - child.current_player]; // return since it is a winning move
+    }
+    child.move_to(child.player_pos[child.current_player]); // have the opponent stay where they are
+    var player_move_count = -1 * child.get_possible_moves().length; // how many moves you have * -1
+    var count = opponent_move_count + player_move_count;
+    if (count < val) { // if this is better than old move, then update
+      val = count;
+      best_child = child;
+    }
+  }
+  return best_child.player_pos[best_child.current_player];
 }
