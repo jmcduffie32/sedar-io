@@ -305,7 +305,7 @@ function update_board() {
         ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(1 + p / 8), x, y);
       }
     }
-    
+
     // edge lines
     ctx.fillStyle = "lightgrey";
     ctx.fillRect(0, 798, 800, 2);
@@ -401,7 +401,7 @@ function update_board() {
 
     // queen pieces
     for (i in player_pos) {
-      var color = {0:"white", 1:"black"}[i];
+      var color = {0:"#f2f2f2", 1:"#191919"}[i];
       ctx.fillStyle = color;
       ctx.shadowColor = "grey";
       ctx.shadowBlur = 7;
@@ -410,11 +410,14 @@ function update_board() {
       ctx.beginPath();
       ctx.arc(player_xy[2 * i], player_xy[2 * i + 1], 40, 0, 2 * Math.PI, false);
       ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
     }
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+
+
+
 
     // add red current player dot
     if (!won && !moving && player_pos.length == 2){

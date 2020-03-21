@@ -241,6 +241,7 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
 }
 
 
+
 /**
     chaser is a player that makes the move that gets it the closest to the
     other player's position
