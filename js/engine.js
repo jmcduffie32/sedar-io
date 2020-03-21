@@ -244,7 +244,7 @@ function update_board() {
 
     // add the grid lines
     ctx.fillStyle = "lightgrey";
-    for (var i = 1; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       ctx.fillRect(0, i * 100, 800, 2);
       ctx.fillRect(i * 100, 0, 2, 800);
     }
@@ -305,6 +305,11 @@ function update_board() {
         ctx.fillText(["a","b","c","d","e","f","g","h"][p % 8] + Math.floor(1 + p / 8), x, y);
       }
     }
+    
+    // edge lines
+    ctx.fillStyle = "lightgrey";
+    ctx.fillRect(0, 798, 800, 2);
+    ctx.fillRect(798, 0, 2, 800);
 
     // draw arrow // TODO: make this less messy
     if (arrow != []) {
@@ -393,6 +398,7 @@ function update_board() {
     }
     }
 
+
     // queen pieces
     for (i in player_pos) {
       var color = {0:"white", 1:"black"}[i];
@@ -439,6 +445,7 @@ function update_board() {
       };
       crown.src = "img/crown.png";
     }
+
 
   }
 }
