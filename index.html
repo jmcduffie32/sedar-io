@@ -79,12 +79,22 @@
         .btn-group-wrap {
             text-align: center;
         }
+        .bottom-link {
+          font-size:10pt;
+          transition: 0.5s ease;
+          transition-delay: 0.1s;
+        }
+        .bottom-link:hover {
+          font-style: underline;
+          padding-left: 10px;
+          transition: 0.5s ease;
+        }
 
     </style>
 
 
   </head>
-  <body style="min-width:840px;" onload="set_color();">
+  <body onload="set_color();">
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -117,16 +127,16 @@
 
 
     <img src="img/forest.jpg" style="position:fixed; height:100%; width:100%; z-index:-999;"/>
-    <div class="container">
+    <div class="container" style="min-width:882px">
       <div class="row">
         <div class="col-lg-12">
-          <img class="center-block" src="img/logo.png" style="width:800px; margin-top:20px"/>
+          <img class="center-block" src="img/logo.png" style="width:800px; margin-top:20px; max-width:100%"/>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-9">
           <div class="bg-shadow center-block panel">
-            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"</canvas>
+            <canvas id="board" style="width:800px; height:800px; resize: both;" onclick="set_loc(); game_step();"</canvas>
           </div>
         </div>
         <div class="col-lg-3">
@@ -259,10 +269,10 @@
                   </label>
                 </div>
               </div>
-            <a data-toggle="modal" data-target="#myModal" style="font-size:10pt" href=""><u>Learn to Play!</u></a><br>
-            <a style="font-size:10pt" href="https://www.noteflight.com/scores/view/47de156bd5eba00051378e54d699472c188d9413" target="_blank"><u>See the Music</u></a><br>
-            <a style="font-size:10pt" href="https://github.com/francisp336/sedar-io" target="_blank"><u>See the Code (contribute to the AI)</u></a><br>
-            <a style="font-size:10pt" href="AI_test.html" target="_blank"><u>AI Test Page</u></a>
+            <a data-toggle="modal" data-target="#myModal" class="bottom-link" href=""> Learn to Play!</a> ><br>
+            <a class="bottom-link" href="https://www.noteflight.com/scores/view/47de156bd5eba00051378e54d699472c188d9413" target="_blank"> See the Music</a> ><br>
+            <a class="bottom-link" href="https://github.com/francisp336/sedar-io" target="_blank"> See the Code & contribute to the AI</a> ><br>
+            <a class="bottom-link" href="AI_test.html" target="_blank">AI Test Page</a> >
           </div>
         </div>
       </div>
