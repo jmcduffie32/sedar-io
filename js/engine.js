@@ -53,8 +53,8 @@ function start_game() {
 var loc = -1;
 function set_loc() {
   var rect = canvas.getBoundingClientRect();
-  var USER_X = event.clientX - rect.left;
-  var USER_Y = event.clientY - rect.top;
+  var USER_X = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+  var USER_Y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
   var row = (USER_Y - (USER_Y % 100)) / 100;
   var col = (USER_X - (USER_X % 100)) / 100;
   loc = row * 8 + col;
@@ -65,8 +65,8 @@ var hover_loc = -1;
 var hover_xy = [];
 canvas.addEventListener('mousemove', function(evt) {
   var rect = canvas.getBoundingClientRect();
-  var x = evt.clientX - rect.left;
-  var y = evt.clientY - rect.top;
+  var x = (evt.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+  var y = (evt.clientY - rect.top) * (canvas.height / canvas.clientHeight);
   var row = (y - (y % 100)) / 100;
   var col = (x - (x % 100)) / 100;
   hover_loc = row * 8 + col;
