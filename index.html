@@ -11,6 +11,12 @@
 
     <style>
 
+        html {
+          width: 100%;
+          min-width: 233px;
+        }
+
+
         *, a, a:hover, h1 {
             color: lightgrey;
         }
@@ -20,12 +26,12 @@
             margin:0px;
             box-shadow: 0px 0px 20px 1px black;
             display: block;
+            width:100%;
         }
 
         .bg-shadow {
-          width:840px;
           background-color: #3F3F3F;
-          padding:20px;
+          padding:10px;
           /* box-shadow: 0px 0px 10px 5px lightgrey; */
 
         }
@@ -127,16 +133,16 @@
 
 
     <img src="img/forest.jpg" style="position:fixed; height:100%; width:100%; z-index:-999;"/>
-    <div class="container" style="min-width:882px">
+    <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <img class="center-block" src="img/logo.png" style="width:800px; margin-top:20px; max-width:100%"/>
+          <img class="center-block" src="img/logo.png" style="width:100%; margin-top:20px; max-width:calc(min(100%, 800px))"/>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-9" style="padding: 5px;">
           <div class="bg-shadow center-block panel">
-            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"</canvas>
+            <canvas id="board" width="800" height="800" onclick="set_loc(); game_step();"></canvas>
           </div>
         </div>
         <div class="col-lg-3">
@@ -178,52 +184,55 @@
                 <button class="btn dark-button btn-default center-block" onclick="reset_scores();" style="padding:3px 6px; margin-top:15px;">Reset</button>
               </div>
             <div class="panel dark" style="padding:10px;">
-                <h4 class="text-center">Game Settings</h4><br>
-                <label>
-                  <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
-                </label>
-                <h5>Mode:</h5>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="human" checked>Two-Player
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="mode" value="computer" checked>Computer
-                </label>
-                <h5>Computer Color:</h5>
-                <label class="radio-inline">
-                  <input type="radio" name="comp_color" value="white">white
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="comp_color" value="black" checked>black
-                </label>
-                <h5>Computer Difficulty:</h5>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="0"><a data-toggle="tooltip" data-placement="right" title="first possible move">0</a>&emsp;
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="1"><a data-toggle="tooltip" data-placement="right" title="random">1</a>&emsp;
-                </label>
+              <h4 class="text-center">Game Settings</h4><br>
+              <label>
+                <input type="checkbox" name="custom_start" value="custom_start" id="custom_start"> Custom Start Position
+              </label>
+              <h5>Mode:</h5>
+              <label class="radio-inline">
+                <input type="radio" name="mode" value="human" checked>Two-Player
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="mode" value="computer" checked>Computer
+              </label>
+              <h5>Computer Color:</h5>
+              <label class="radio-inline">
+                <input type="radio" name="comp_color" value="white">white
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="comp_color" value="black" checked>black
+              </label>
+              <h5>Computer Difficulty:</h5>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="0"><a data-toggle="tooltip" data-placement="right" title="first possible move">0</a>&emsp;
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="1"><a data-toggle="tooltip" data-placement="right" title="random">1</a>&emsp;
+              </label>
 
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="2"><a data-toggle="tooltip" data-placement="right" title="min opp mobility">2</a>&emsp;
-                </label>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="2"><a data-toggle="tooltip" data-placement="right" title="min opp mobility">2</a>&emsp;
+              </label>
 
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="3" ><a data-toggle="tooltip" data-placement="right" title="max play mobility">3</a>&emsp;
-                </label>
-                <br>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="4"><a data-toggle="tooltip" data-placement="right" title="chaser">4</a>&emsp;
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="diff" value="5" checked><a data-toggle="tooltip" data-placement="right" title="2 and 3">5</a>&emsp;
-                </label>
-                <br>
-                <br>
-                <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
-                  Start
-                </button>
-              </div>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="3" ><a data-toggle="tooltip" data-placement="right" title="max play mobility">3</a>&emsp;
+              </label>
+              <br>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="4"><a data-toggle="tooltip" data-placement="right" title="chaser">4</a>&emsp;
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="diff" value="5" checked><a data-toggle="tooltip" data-placement="right" title="2 and 3">5</a>&emsp;
+              </label>
+              <!-- <label class="radio-inline">
+                <input type="radio" name="diff" value="6"><a data-toggle="tooltip" data-placement="right" title="monte carlo">6</a>&emsp;
+              </label> -->
+              <br>
+              <br>
+              <button class="btn btn-block btn-lg btn-success center-block" style="border:0px;" onclick="start_game()" id="start">
+                Start
+              </button>
+            </div>
             <div class="panel dark" style="padding:10px;">
                 <div class="panel-heading panel-title">
                   <a data-toggle="collapse" href="#collapse">

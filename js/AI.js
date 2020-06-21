@@ -1,5 +1,6 @@
 
-
+const WHITE = 0;
+const BLACK = 1;
 
 
 class state {
@@ -328,7 +329,27 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
 
 
 
-
+function monte_carlo(board, arrow, player_pos, current_player) {
+  var game_state = new state(board, arrow, player_pos, current_player);
+  var val = -Infinity;
+  var best_child = null;
+  var children = game_state.expand();
+  for (var i in children) {
+    var child = children[i];
+    var white_pos = child.board.indexOf(WHITE);
+    var black_pos = child.board.indexOf(BLACK);
+    var num_wins = 0;
+    for (var j = 0; j < 100; j++) {
+      if (play_game(random_play, random_play, white_pos, black_pos) == current_player) {
+        num_wins += 1;
+      }
+    }
+    if (num_wins >= val) {
+      best_child = child;
+    }
+  }
+  return best_child.player_pos[1 - best_child.current_player];
+}
 
 
 
@@ -343,8 +364,12 @@ var all_AI_list = [first_possible_move, // 0
                    min_opp_mobility, // 2
                    max_play_mobility, // 3
                    chaser, // 4
-                   min_opp_and_max_play_mobility // 5
+                   min_opp_and_max_play_mobility, // 5
+                   monte_carlo // 6
                  ];
+
+
+
 
 
 
@@ -409,37 +434,37 @@ function fight() {
 
 
 
-
-function run() {
-
- // search for best coefficients on strategies against random_play()
- var best_alpha = 0;
- var best_win_rate = 0;
-
- var alpha = 0;
- var DIFF = 0.1;
-
- while (alpha < 1) { // iterate through values for alpha
-   print("alpha = " + alpha);
-   var win_rate = 0;
-   for (i in [...Array(300)]) { // play 300 games per alpha setting
-     player_1_func = Math.random() <= alpha ? min_opp_and_max_play_mobility: chaser;
-     if (play_game(player_1_func, random_play, 3, 60) == 0) { // if white win
-       win_rate++;
-     }
-   }
-   print("win_rate = " + (win_rate / 300));
-   if (win_rate > best_win_rate) {
-     best_win_rate = win_rate;
-     best_alpha = alpha;
-   }
-   alpha += DIFF;
- }
-
-
- print("best_alpha = " + best_alpha);
-
-
-
-
-}
+//
+// function run() {
+//
+//  // search for best coefficients on strategies against random_play()
+//  var best_alpha = 0;
+//  var best_win_rate = 0;
+//
+//  var alpha = 0;
+//  var DIFF = 0.1;
+//
+//  while (alpha < 1) { // iterate through values for alpha
+//    print("alpha = " + alpha);
+//    var win_rate = 0;
+//    for (i in [...Array(300)]) { // play 300 games per alpha setting
+//      player_1_func = Math.random() <= alpha ? min_opp_and_max_play_mobility: chaser;
+//      if (play_game(player_1_func, random_play, 3, 60) == 0) { // if white win
+//        win_rate++;
+//      }
+//    }
+//    print("win_rate = " + (win_rate / 300));
+//    if (win_rate > best_win_rate) {
+//      best_win_rate = win_rate;
+//      best_alpha = alpha;
+//    }
+//    alpha += DIFF;
+//  }
+//
+//
+//  print("best_alpha = " + best_alpha);
+//
+//
+//
+//
+// }
