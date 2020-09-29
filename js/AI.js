@@ -3,7 +3,7 @@ const WHITE = 0;
 const BLACK = 1;
 
 
-class state {
+class State {
 
   constructor(board, arrow, player_pos, current_player) {
     this.board = [...board];
@@ -169,7 +169,7 @@ class state {
   }
 
   clone() {
-    return new state([...this.board], [...this.arrow], [...this.player_pos], this.current_player);
+    return new State([...this.board], [...this.arrow], [...this.player_pos], this.current_player);
   }
 
   expand() {
@@ -187,15 +187,18 @@ class state {
 }
 
 
+
+
+
 function first_possible_move(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var possible_moves = game_state.get_possible_moves();
   return possible_moves[0];
 }
 
 
 function random_play(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var possible_moves = game_state.get_possible_moves();
   return possible_moves[Math.floor(Math.random() * possible_moves.length)];
 }
@@ -206,7 +209,7 @@ function random_play(board, arrow, player_pos, current_player) {
     of restricting the mobility of the opponent on their next turn.
 **/
 function min_opp_mobility(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
   var best_child = null;
   var children = game_state.expand();
@@ -232,7 +235,7 @@ function min_opp_mobility(board, arrow, player_pos, current_player) {
     maximizing the player's mobility after this move.
 **/
 function max_play_mobility(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var val = 0;
   var best_child = null;
   var children = game_state.expand();
@@ -264,7 +267,7 @@ function max_play_mobility(board, arrow, player_pos, current_player) {
     other player's position
 **/
 function chaser(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
   var best_child = null;
   var children = game_state.expand();
@@ -304,7 +307,7 @@ function chaser(board, arrow, player_pos, current_player) {
     maximizing the player's mobility after this move.
 **/
 function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
   var best_child = null;
   var children = game_state.expand();
@@ -329,8 +332,11 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
 
 
 
+/**
+  experimental and VERY SLOW => do not use
+**/
 function monte_carlo(board, arrow, player_pos, current_player) {
-  var game_state = new state(board, arrow, player_pos, current_player);
+  var game_state = new State(board, arrow, player_pos, current_player);
   var val = -Infinity;
   var best_child = null;
   var children = game_state.expand();
@@ -359,14 +365,14 @@ function monte_carlo(board, arrow, player_pos, current_player) {
 
 
 
-var all_AI_list = [first_possible_move, // 0
-                   random_play, // 1
-                   min_opp_mobility, // 2
-                   max_play_mobility, // 3
-                   chaser, // 4
-                   min_opp_and_max_play_mobility, // 5
-                   monte_carlo // 6
-                 ];
+var all_AI_list = [
+  first_possible_move,
+  random_play,
+  min_opp_mobility,
+  max_play_mobility,
+  chaser,
+  min_opp_and_max_play_mobility,
+];
 
 
 
@@ -378,7 +384,18 @@ var all_AI_list = [first_possible_move, // 0
 
 
 
-function print(string) { document.getElementById('run').innerHTML += string + "<br>>>> "; console.log(string)}
+
+
+
+
+
+
+
+
+
+function print(string) {
+  document.getElementById('run').innerHTML += string + "<br>>>> "; console.log(string);
+}
 
 
 
@@ -387,7 +404,7 @@ var empty_board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 
 function play_game(white_func, black_func, white_start, black_start) {
- var game_state = new state(empty_board, [], [white_start, black_start], 0);
+ var game_state = new State(empty_board, [], [white_start, black_start], 0);
  game_state.board[white_start] = 2;
  game_state.board[black_start] = 3;
  while (game_state.get_possible_moves().length != 0) { // while game is not over
@@ -409,22 +426,24 @@ function play_game(white_func, black_func, white_start, black_start) {
 
 
 function fight() {
- document.getElementById('fight').innerHTML = ">>> loading...";
- var white_num = document.querySelector('input[name="white"]:checked').value;
- var black_num = document.querySelector('input[name="black"]:checked').value;
- white_func = all_AI_list[white_num];
- black_func = all_AI_list[black_num];
+  document.getElementById('fight').innerHTML = ">>> loading...";
+  var white_func = eval(document.querySelector('input[name="white"]:checked').value);
+  var black_func = eval(document.querySelector('input[name="black"]:checked').value);
 
- var num_games = document.getElementById('numGames').value;
- var white_start = document.getElementById('white_start').value;
- var black_start = document.getElementById('black_start').value;
+  var num_games = document.getElementById('numGames').value;
+  var white_start = document.getElementById('white_start').value;
+  var black_start = document.getElementById('black_start').value;
 
- var num_white_wins = 0;
- for (i in [...Array(Number(num_games))]) {
+  var num_white_wins = 0;
+  for (var i = 0; i < num_games; i++) {
    num_white_wins += play_game(white_func, black_func, white_start, black_start) == 0 ? 1 : 0;
- }
+  }
 
- document.getElementById('fight').innerHTML = "White (" + white_num + ") wins: " + num_white_wins + " (" + (num_white_wins * 100 / num_games) + "%)<br>" + "Black (" + black_num + ") wins: " + (num_games - num_white_wins) + " (" + ((num_games - num_white_wins) * 100 / num_games) + "%)" ;
+  document.getElementById('fight').innerHTML =
+    "White (" + white_func.name + ") wins: " + num_white_wins
+      + " (" + (num_white_wins * 100 / num_games) + "%)<br>" +
+    "Black (" + black_func.name + ") wins: " + (num_games - num_white_wins)
+      + " (" + ((num_games - num_white_wins) * 100 / num_games) + "%)" ;
 }
 
 
