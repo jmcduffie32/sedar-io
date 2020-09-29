@@ -4,9 +4,7 @@ const BLACK = 1;
 
 
 class State {
-// tail p, head p, slope, tail r, tail c, head r, head c
-//    0      1       2      3        4      5       6
-
+  
   constructor(board, arrow, player_pos, current_player) {
     /**
       board - 1D representation of the bord ()
