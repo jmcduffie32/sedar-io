@@ -4,66 +4,82 @@ const BLACK = 1;
 
 
 class State {
+// tail p, head p, slope, tail r, tail c, head r, head c
+//    0      1       2      3        4      5       6
 
   constructor(board, arrow, player_pos, current_player) {
+    /**
+      board - 1D representation of the bord ()
+      arrow = JS object
+        {
+          tail: {r: #, c: #, p: #},
+          head: {r: #, c: #, p: #},
+          slope: #
+        }
+      player_pos - two element array of player board positions indexed by  0 (WHITE) or 1 (BLACK)
+      current player - 0 (WHITE) or 1 (BLACK)
+    **/
+
     this.board = [...board];
-    this.arrow = [...arrow];
+    this.arrow = JSON.parse(JSON.stringify(arrow));
     this.player_pos = [...player_pos];
     this.current_player = current_player;
   }
 
   arrowize(p1,p2) {
-    var arrow_tail_r = Math.floor(p1/8);
-    var arrow_tail_c = p1 % 8;
-    var arrow_head_r = Math.floor(p2/8);
-    var arrow_head_c = p2 % 8;
-    var slope = Infinity;
+    var arrow = {
+      tail: {r: Math.floor(p1/8), c: p1 % 8},
+      head: {r: Math.floor(p2/8), c: p2 % 8},
+    };
 
-    // make sure that the tail is to the left
-    if (arrow_tail_c > arrow_head_c) {
-      var temp_tail_r = arrow_tail_r;
-      var temp_tail_c = arrow_tail_c;
-      arrow_tail_r = arrow_head_r;
-      arrow_tail_c = arrow_head_c;
-      arrow_head_r = temp_tail_r;
-      arrow_head_c = temp_tail_c;
+    // make sure that the tail is to the left (switch head and tail if not)
+    if (arrow.tail.c > arrow.head.c) {
+      arrow = {
+        tail: arrow.head,
+        head: arrow.tail,
+      }
     }
 
-    if (arrow_tail_c == arrow_head_c) { // vertical
-      arrow_tail_r = 0;
-      arrow_head_r = 7;
+    if (arrow.tail.c == arrow.head.c) { // vertical
+      arrow.tail.r = 0;
+      arrow.head.r = 7;
+      arrow.slope = Infinity;
     }
-    else if (arrow_tail_r == arrow_head_r) { // horizontal
-      slope = 0;
-      arrow_tail_c = 0;
-      arrow_head_c = 7;
+    else if (arrow.tail.r == arrow.head.r) { // horizontal
+      arrow.tail.c = 0;
+      arrow.head.c = 7;
+      arrow.slope = 0;
     }
     else {
-      slope = arrow_tail_r < arrow_head_r ? -1 : 1;
+      arrow.slope = arrow.tail.r < arrow.head.r ? -1 : 1;
 
       // find edge for tail
-      while (arrow_tail_c > 0 && arrow_tail_r > 0 && arrow_tail_r < 7) {
-        arrow_tail_c--;
-        arrow_tail_r += slope;
+      while (arrow.tail.c > 0 && arrow.tail.r > 0 && arrow.tail.r < 7) {
+        arrow.tail.c--;
+        arrow.tail.r += arrow.slope;
       }
 
       // find edge for head
-      while (arrow_head_c < 7 && arrow_head_r > 0 && arrow_head_r < 7) {
-        arrow_head_c++;
-        arrow_head_r -= slope;
+      while (arrow.head.c < 7 && arrow.head.r > 0 && arrow.head.r < 7) {
+        arrow.head.c++;
+        arrow.head.r -= arrow.slope;
       }
     }
-    this.arrow = [arrow_tail_r * 8 + arrow_tail_c, arrow_head_r * 8 + arrow_head_c, slope, arrow_tail_r, arrow_tail_c, arrow_head_r, arrow_head_c];
+
+    arrow.tail.p = arrow.tail.r * 8 + arrow.tail.c;
+    arrow.head.p = arrow.head.r * 8 + arrow.head.c;
+
+    this.arrow = arrow;
   }
 
   is_on_arrow(p) {
-    if (this.arrow == []) {
+    if (JSON.stringify(this.arrow) == '{}') {
       return false;
     }
-    var x1 = this.arrow[4];
-    var y1 = -1 * this.arrow[3];
-    var x2 = this.arrow[6];
-    var y2 = -1 * this.arrow[5];
+    var x1 = this.arrow.tail.c;
+    var y1 = -1 * this.arrow.tail.r;
+    var x2 = this.arrow.head.c;
+    var y2 = -1 * this.arrow.head.r;
     var r = -1 * Math.floor(p / 8);
     var c = p % 8;
 
@@ -125,13 +141,13 @@ class State {
   }
 
   is_on_same_side_of_arrow(p1, p2) {
-    if (this.arrow.length == 0) {
+    if (JSON.stringify(this.arrow) == '{}') {
       return true;
     }
 
     // arrow is vertical
-    if (this.arrow[2] == Infinity) {
-      if (((p1 % 8) < this.arrow[4] && (p2 % 8) < this.arrow[4]) || ((p1 % 8) > this.arrow[4] && (p2 % 8) > this.arrow[4]))
+    if (this.arrow.slope == Infinity) {
+      if (((p1 % 8) < this.arrow.tail.c && (p2 % 8) < this.arrow.tail.r) || ((p1 % 8) > this.arrow.tail.c && (p2 % 8) > this.arrow.tail.c))
         return true;
       else
         return false;
@@ -139,8 +155,8 @@ class State {
 
     // arrow is slanted
     else {
-      var row_on_arrow_in_col_of_p1 = this.arrow[3] + this.arrow[2] * (this.arrow[4] - (p1 % 8));
-      var row_on_arrow_in_col_of_p2 = this.arrow[3] + this.arrow[2] * (this.arrow[4] - (p2 % 8));
+      var row_on_arrow_in_col_of_p1 = this.arrow.tail.c + this.arrow.slope * (this.arrow.tail.c - (p1 % 8));
+      var row_on_arrow_in_col_of_p2 = this.arrow.tail.r + this.arrow.slope * (this.arrow.tail.c - (p2 % 8));
       if (Math.floor(p1 / 8) > row_on_arrow_in_col_of_p1 && Math.floor(p2 / 8) > row_on_arrow_in_col_of_p2)
         return true;
       if (Math.floor(p1 / 8) < row_on_arrow_in_col_of_p1 && Math.floor(p2 / 8) < row_on_arrow_in_col_of_p2)
@@ -164,12 +180,12 @@ class State {
     this.current_player = 1 - this.current_player;
 
     if (this.is_on_arrow(this.player_pos[0]) && this.is_on_arrow(this.player_pos[1])) {
-      this.arrow = [];
+      this.arrow = {};
     }
   }
 
   clone() {
-    return new State([...this.board], [...this.arrow], [...this.player_pos], this.current_player);
+    return new State([...this.board], JSON.parse(JSON.stringify(arrow)), [...this.player_pos], this.current_player);
   }
 
   expand() {
@@ -365,7 +381,7 @@ var empty_board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 
 function play_game(white_func, black_func, white_start, black_start) {
- var game_state = new State(empty_board, [], [white_start, black_start], 0);
+ var game_state = new State(empty_board, {}, [white_start, black_start], 0);
  game_state.board[white_start] = 2;
  game_state.board[black_start] = 3;
  while (game_state.get_possible_moves().length != 0) { // while game is not over
