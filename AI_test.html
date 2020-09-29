@@ -57,7 +57,7 @@
 
   </head>
   <body>
-
+    <script src="js/State.js"></script>
     <script src="js/AI.js"></script>
 
     <div class="container">
@@ -270,7 +270,146 @@
 
 
 
+    function print(string) {
+      document.getElementById('run').innerHTML += string + "<br>>>> "; console.log(string);
+    }
+
+
+
+    var empty_board = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+
+
+    function play_game(white_func, black_func, white_start, black_start) {
+     var game_state = new State(empty_board, [], [white_start, black_start], 0);
+     game_state.board[white_start] = 2;
+     game_state.board[black_start] = 3;
+     while (game_state.get_possible_moves().length != 0) { // while game is not over
+       if (game_state.current_player == 0) {
+         var move = white_func(game_state.board, game_state.arrow, game_state.player_pos, game_state.current_player);
+       } else {
+         var move = black_func(game_state.board, game_state.arrow, game_state.player_pos, game_state.current_player);
+       }
+       game_state.move_to(move);
+     }
+     return 1 - game_state.current_player;
+    }
+
+
+
+
+
+
+    function fight() {
+      document.getElementById('fight').innerHTML = ">>> loading...";
+      var white_func = eval(document.querySelector('input[name="white"]:checked').value);
+      var black_func = eval(document.querySelector('input[name="black"]:checked').value);
+
+      var num_games = Number(document.getElementById('numGames').value);
+      var white_start = Number(document.getElementById('white_start').value);
+      var black_start = Number(document.getElementById('black_start').value);
+
+      var num_white_wins = 0;
+      for (var i = 0; i < num_games; i++) {
+       num_white_wins += play_game(white_func, black_func, white_start, black_start) == 0 ? 1 : 0;
+      }
+
+      document.getElementById('fight').innerHTML =
+        "White (" + white_func.name + ") wins: " + num_white_wins
+          + " (" + (num_white_wins * 100 / num_games) + "%)<br>" +
+        "Black (" + black_func.name + ") wins: " + (num_games - num_white_wins)
+          + " (" + ((num_games - num_white_wins) * 100 / num_games) + "%)" ;
+    }
+
 
 
   </script>
 </html>
+
+
+
+
+<!---
+ Grave yard:
+
+
+
+/**
+  experimental and VERY SLOW => do not use
+**/
+// function monte_carlo(board, arrow, player_pos, current_player) {
+//   var game_state = new State(board, arrow, player_pos, current_player);
+//   var val = -Infinity;
+//   var best_child = null;
+//   var children = game_state.expand();
+//   for (var i in children) {
+//     var child = children[i];
+//     var white_pos = child.board.indexOf(WHITE);
+//     var black_pos = child.board.indexOf(BLACK);
+//     var num_wins = 0;
+//     for (var j = 0; j < 100; j++) {
+//       if (play_game(random_play, random_play, white_pos, black_pos) == current_player) {
+//         num_wins += 1;
+//       }
+//     }
+//     if (num_wins >= val) {
+//       best_child = child;
+//     }
+//   }
+//   return best_child.player_pos[1 - best_child.current_player];
+// }
+
+
+//
+// function run() {
+//
+//  // search for best coefficients on strategies against random_play()
+//  var best_alpha = 0;
+//  var best_win_rate = 0;
+//
+//  var alpha = 0;
+//  var DIFF = 0.1;
+//
+//  while (alpha < 1) { // iterate through values for alpha
+//    print("alpha = " + alpha);
+//    var win_rate = 0;
+//    for (i in [...Array(300)]) { // play 300 games per alpha setting
+//      player_1_func = Math.random() <= alpha ? min_opp_and_max_play_mobility: chaser;
+//      if (play_game(player_1_func, random_play, 3, 60) == 0) { // if white win
+//        win_rate++;
+//      }
+//    }
+//    print("win_rate = " + (win_rate / 300));
+//    if (win_rate > best_win_rate) {
+//      best_win_rate = win_rate;
+//      best_alpha = alpha;
+//    }
+//    alpha += DIFF;
+//  }
+//
+//
+//  print("best_alpha = " + best_alpha);
+//
+//
+//
+//
+// }
+
+//  <div class="panel panel-default">
+//   <div class="panel-heading">
+//     <div class="row">
+//       <div class="col-md-6">
+//         <button type="button" class="btn btn-primary" onclick="run();">run()</button>
+//       </div>
+//       <div class="col-md-6 text-right">
+//         <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('run').innerHTML='>>> ';">Clear</button>
+//       </div>
+//     </div>
+//   </div>
+//   <div class="panel-body console-out">
+//     <p id="run">>>> </p>
+//   </div>
+// </div>
+
+
+-->
