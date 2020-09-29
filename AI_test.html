@@ -14,6 +14,11 @@
     <meta http-equiv="cache-control" content="no-cache" />
 
     <style>
+
+      body {
+        margin-bottom: 100px;
+      }
+
       p, button {
         font-family: monospace;
       }
@@ -25,7 +30,7 @@
       }
 
       h3 {
-        margin-top:10px;
+        margin-top:40px;
       }
 
       .layout > tbody > tr > td {
@@ -82,67 +87,6 @@
             </div>
             <div class="panel-body">
               <div class="row">
-                <!-- <div class="col-md-3">
-                  <h5>White</h5>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="0" checked>first possible move (0)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="1">random (1)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="2">min opp mobility (2)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="3">max play mobility (3)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="4">chaser (4)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="5">2 and 3 (5)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="white" value="6">monte carlo (6)</input>
-                  </label>
-                </div>
-                <div class="col-md-3">
-                  <h5>Black</h5>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="0">first possible move (0)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="1" checked>random (1)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="2">min opp mobility (2)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="3">max play mobility (3)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="4">chaser (4)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="5">2 and 3 (5)</input>
-                  </label>
-                  <br>
-                  <label class="radio-inline">
-                    <input type="radio" name="black" value="6">monte carlo (6)</input>
-                  </label>
-                </div> -->
-
                 <div class="col-md-6">
                   <table class="table">
                     <thead>
@@ -260,21 +204,11 @@
               <p id="fight">>>> </p>
             </div>
           </div>
-          <!-- <div class="panel panel-default">
-            <div class="panel-heading">
-              <div class="row">
-                <div class="col-md-6">
-                  <button type="button" class="btn btn-primary" onclick="run();">run()</button>
-                </div>
-                <div class="col-md-6 text-right">
-                  <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('run').innerHTML='>>> ';">Clear</button>
-                </div>
-              </div>
-            </div>
-            <div class="panel-body console-out">
-              <p id="run">>>> </p>
-            </div>
-          </div> -->
+        </div>
+      </div>
+      <div class="row" style="margin-top: 40px;">
+        <div class="col-md-12" id="descriptions">
+          <h2>AI Style Descriptions</h2>
         </div>
       </div>
     </div>
@@ -283,6 +217,7 @@
   <script>
 
     function select_square(color, number) {
+      if (number == "") {return;}
       if (isNaN(number) || (number % 1 != 0) || (number > 61) || (number < 0)) {
         alert("input must be an integer in [0,61].");
         return;
@@ -319,11 +254,18 @@
         select_td.appendChild(select);
         tr.appendChild(select_td);
       }
-
-
-
-
       document.getElementById('play-styles').appendChild(tr);
+
+
+      // style descriptions
+
+      var h3 = document.createElement('h3');
+      h3.appendChild(document.createTextNode(all_AI_list[i].name));
+      var p = document.createElement('p');
+      p.appendChild(document.createTextNode(all_AI_list[i].description));
+      document.getElementById('descriptions').appendChild(h3);
+      document.getElementById('descriptions').appendChild(p);
+
     }
 
 

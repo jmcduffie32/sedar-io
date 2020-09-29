@@ -190,11 +190,13 @@ class State {
 
 
 
+
 function first_possible_move(board, arrow, player_pos, current_player) {
   var game_state = new State(board, arrow, player_pos, current_player);
   var possible_moves = game_state.get_possible_moves();
   return possible_moves[0];
 }
+first_possible_move.description = "a player that makes the first possible move in row-col order";
 
 
 function random_play(board, arrow, player_pos, current_player) {
@@ -202,12 +204,9 @@ function random_play(board, arrow, player_pos, current_player) {
   var possible_moves = game_state.get_possible_moves();
   return possible_moves[Math.floor(Math.random() * possible_moves.length)];
 }
+random_play.description = "a player that plays randomly";
 
 
-/**
-    min_opp_mobility is a player that makes moves only based off
-    of restricting the mobility of the opponent on their next turn.
-**/
 function min_opp_mobility(board, arrow, player_pos, current_player) {
   var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
@@ -227,13 +226,9 @@ function min_opp_mobility(board, arrow, player_pos, current_player) {
   }
   return best_child.player_pos[1 - best_child.current_player];
 }
+min_opp_mobility.description = "a player that makes moves only based off of restricting the mobility of the opponent on their next turn.";
 
 
-
-/**
-    min_opp_and_max_play_mobility is a player that makes move based off
-    maximizing the player's mobility after this move.
-**/
 function max_play_mobility(board, arrow, player_pos, current_player) {
   var game_state = new State(board, arrow, player_pos, current_player);
   var val = 0;
@@ -259,13 +254,9 @@ function max_play_mobility(board, arrow, player_pos, current_player) {
   }
   return best_child.player_pos[1 - best_child.current_player];
 }
+max_play_mobility.description = "a player that makes move based off maximizing the player's mobility after this move.";
 
 
-
-/**
-    chaser is a player that makes the move that gets it the closest to the
-    other player's position
-**/
 function chaser(board, arrow, player_pos, current_player) {
   var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
@@ -298,14 +289,9 @@ function chaser(board, arrow, player_pos, current_player) {
   }
   return best_child.player_pos[1 - best_child.current_player];
 }
+chaser.description = "a player that makes the move that gets it the closest to the other player's position";
 
 
-
-/**
-    min_opp_and_max_play_mobility is a player that makes move based off
-    of restructing the mobility of the opponent on their next turn and
-    maximizing the player's mobility after this move.
-**/
 function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player) {
   var game_state = new State(board, arrow, player_pos, current_player);
   var val = Infinity;
@@ -328,36 +314,11 @@ function min_opp_and_max_play_mobility(board, arrow, player_pos, current_player)
   }
   return best_child.player_pos[best_child.current_player];
 }
+min_opp_and_max_play_mobility.description = "a player that makes move based off of restructing the mobility of the opponent on their next turn and maximizing the player's mobility after this move.";
 
 
-
-
-/**
-  experimental and VERY SLOW => do not use
-**/
-function monte_carlo(board, arrow, player_pos, current_player) {
-  var game_state = new State(board, arrow, player_pos, current_player);
-  var val = -Infinity;
-  var best_child = null;
-  var children = game_state.expand();
-  for (var i in children) {
-    var child = children[i];
-    var white_pos = child.board.indexOf(WHITE);
-    var black_pos = child.board.indexOf(BLACK);
-    var num_wins = 0;
-    for (var j = 0; j < 100; j++) {
-      if (play_game(random_play, random_play, white_pos, black_pos) == current_player) {
-        num_wins += 1;
-      }
-    }
-    if (num_wins >= val) {
-      best_child = child;
-    }
-  }
-  return best_child.player_pos[1 - best_child.current_player];
-}
-
-
+// add more here!
+// don't forget to add the function to the list below
 
 
 
@@ -423,8 +384,6 @@ function play_game(white_func, black_func, white_start, black_start) {
 
 
 
-
-
 function fight() {
   document.getElementById('fight').innerHTML = ">>> loading...";
   var white_func = eval(document.querySelector('input[name="white"]:checked').value);
@@ -451,6 +410,51 @@ function fight() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Grave yard:
+
+
+
+/**
+  experimental and VERY SLOW => do not use
+**/
+// function monte_carlo(board, arrow, player_pos, current_player) {
+//   var game_state = new State(board, arrow, player_pos, current_player);
+//   var val = -Infinity;
+//   var best_child = null;
+//   var children = game_state.expand();
+//   for (var i in children) {
+//     var child = children[i];
+//     var white_pos = child.board.indexOf(WHITE);
+//     var black_pos = child.board.indexOf(BLACK);
+//     var num_wins = 0;
+//     for (var j = 0; j < 100; j++) {
+//       if (play_game(random_play, random_play, white_pos, black_pos) == current_player) {
+//         num_wins += 1;
+//       }
+//     }
+//     if (num_wins >= val) {
+//       best_child = child;
+//     }
+//   }
+//   return best_child.player_pos[1 - best_child.current_player];
+// }
 
 
 //
@@ -487,3 +491,19 @@ function fight() {
 //
 //
 // }
+
+// <!-- <div class="panel panel-default">
+//   <div class="panel-heading">
+//     <div class="row">
+//       <div class="col-md-6">
+//         <button type="button" class="btn btn-primary" onclick="run();">run()</button>
+//       </div>
+//       <div class="col-md-6 text-right">
+//         <button type="button" class="btn btn-danger right-block" onclick="document.getElementById('run').innerHTML='>>> ';">Clear</button>
+//       </div>
+//     </div>
+//   </div>
+//   <div class="panel-body console-out">
+//     <p id="run">>>> </p>
+//   </div>
+// </div> -->
